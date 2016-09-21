@@ -1,6 +1,5 @@
 local comp = require "component"
 local event = require "event"
-local serialization = require "serialization"
 local ghelper = require "glasses_helper"
 
 g = comp.glasses
