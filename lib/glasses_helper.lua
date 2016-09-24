@@ -17,7 +17,7 @@ end
 
 function ghelper.headlineText(text, x_offset, y, box_width, scale, color)
     local label = g.addTextLabel()
-    label.setPosition(x_offset + math.floor(box_width / 2) - math.floor(string.len(text)*1.5), y)
+    label.setPosition(x_offset + box_width - string.len(text)/2+1, y)
     label.setScale(scale)
     label.setColor(color[1], color[2] , color[3])
     --label.setAlpha(0.8)

@@ -11,12 +11,12 @@ local msg = {}
 local hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
 
 function API.fillTable()
-    API.setTable("Home", cmd_showHome, 10,20,3,5)
-    API.setTable("Reactor", cmd_showReactor, 22,32,3,5)
-    API.setTable("Sensors", cmd_showSensors, 34,44,3,5)
-    API.setTable("Time", cmd_toggleTime, 46,56,3,5)
-    API.setTable("Clear", cmd_clearHUD, 22,32,8,10)
-    API.setTable("Exit", cmd_exitHUD, 34,44,8,10)
+    API.setTable("Home", cmd_showHome, 5,15,3,5)
+    API.setTable("Reactor", cmd_showReactor, 17,27,3,5)
+    API.setTable("Sensors", cmd_showSensors, 29,39,3,5)
+    API.setTable("Time", cmd_toggleTime, 41,51,3,5)
+    API.setTable("Clear", cmd_clearHUD, 53,63,3,5)
+    API.setTable("Exit", cmd_exitHUD, 65,75,3,5)
     API.screen()
 end
 
