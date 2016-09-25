@@ -1,18 +1,21 @@
 local robot = require "robot"
 local comp = require "component"
 local sides = require "sides"
+local event = require "event"
 
 local ic = comp.inventory_controller
-local rs = comp.redstone
+local m = comp.modem
 
 local in_side = sides.top
 local out_side = sides.right
 local inv_size = ic.getInventorySize(in_side)
 
+local doFarmLoop = false
+
 function checkInv()
     local slots = {}
 
-    for i = 1, inv_size do
+    for i = 1, 16 do
         local stack = ic.getStackInInternalSlot(i)
         if stack ~= nil then
             slots[i] = stack
@@ -60,8 +63,15 @@ function storeCrystals(internal_inv)
     end
 end
 
+function checkCallback(_, _, _, _, _, msg)
+    doFarmLoop = msg
+end
+
+m.open(8003)
+event.listen("modem_message", checkCallback)
+
 if inv_size ~= nil then
-    while true do
+    while doFarmLoop == true do
         collectSeeds()
         storeCrystals(checkInv())
         checkInput()

@@ -16,7 +16,8 @@ function API.fillTable()
     API.setTable("Sensors", cmd_showSensors, 29,39,3,5)
     API.setTable("Time", cmd_toggleTime, 41,51,3,5)
     API.setTable("Clear", cmd_clearHUD, 53,63,3,5)
-    API.setTable("Exit", cmd_exitHUD, 65,75,3,5)
+    API.setTable("DroneLoop", cmd_toggleDroneLoop, 65,75,3,5)
+    API.setTable("Exit", cmd_exitHUD, 5,15,7,9)
     API.screen()
 end
 
@@ -70,6 +71,17 @@ end
 function cmd_exitHUD()
     msg[1] = 6
     m.send(hub_adress, 8001, serialization.serialize(msg))
+end
+
+function cmd_toggleDroneLoop()
+    API.toggleButton("DroneLoop")
+    if buttonStatus == false then
+        msg = false
+        m.broadcast(8003, msg)
+    else
+        msg = true
+        m.broadcast(8003, msg)
+    end
 end
 
 
