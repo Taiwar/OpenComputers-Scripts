@@ -83,8 +83,11 @@ function collectSeeds()
     dropSeeds(checkInv())
 end
 
-function checkMsg(_, _, _, _, _, msg)
-    doFarmLoop = msg
+function checkMsg(event_name, _, _, _, _, msg)
+    if event_name == "modem_message" then
+        print("got msg: " + msg)
+        doFarmLoop = msg
+    end
 end
 
 m.open(8003)
@@ -93,13 +96,15 @@ event.listen("modem_message", checkMsg)
 while true do
     if inv_size ~= nil then
         while doFarmLoop == true do
+            print("farmLoop")
             if checkInput() == true then
                 collectSeeds()
                 dropSeeds(checkInv())
-                event.timer(120, collectSeeds)
+                event.timer(140, collectSeeds)
             end
             os.sleep(farmLoopDelay)
         end
     end
+    print("idleLoop")
     os.sleep(idleLoopDelay)
 end
