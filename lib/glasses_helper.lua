@@ -1,8 +1,8 @@
-comp = require "component"
+local comp = require "component"
 
-g = comp.glasses
+local g = comp.glasses
 
-ghelper = {}
+local ghelper = {}
 
 function ghelper.infoText(text, x, y , scale, color)
     local label = g.addTextLabel()
@@ -53,6 +53,19 @@ function ghelper.dot(x, y, scale, color)
     dot.setColor(color[1], color[2] , color[3])
 
     return dot
+end
+
+function ghelper.cube(x, y, z, scale, color, alpha, xray, distance)
+    local cube = g.addCube3D()
+
+    cube.set3DPos(x, y, z)
+    cube.setScale(scale)
+    cube.setColor(color[1], color[2] , color[3])
+    cube.setAlpha(alpha)
+    cube.setVisibleThroughObjects(xray)
+    cube.setViewDistance(distance)
+
+    return cube
 end
 
 return ghelper
