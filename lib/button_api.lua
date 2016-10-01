@@ -2,7 +2,6 @@ local API = {}
 local button={}
 
 local component = require("component")
-local colors = require("colors")
 local term = require("term")
 local mon = component.gpu
 local w, h = mon.getResolution()
@@ -65,7 +64,7 @@ function API.flash(name,length)
 end
 
 function API.checkxy(x, y)
-    for name, data in pairs(button) do
+    for _, data in pairs(button) do
         if y>=data["ymin"] and  y <= data["ymax"] then
             if x>=data["xmin"] and x<= data["xmax"] then
                 data["func"]()

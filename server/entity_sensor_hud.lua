@@ -18,14 +18,11 @@ g.removeAll()
 local entity_widgets = {}
 local running = true
 local motion_dot = {}
-local ent_dot = {}
-local player_dot = {}
 local base_y = 40
 local base_x = 10
 local base_width = 130
 local base_text_scale = 0.8
 local primary_color = {1, 1, 1}
---local primary_color = {0.467, 0, 1 }
 local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
 local red_color = {1, 0, 0 }
 local green_color = {0, 1, 0}
@@ -62,7 +59,7 @@ function checkRfids()
     local i = 1
     local player = {}
     local rfids = rfid.scan()
-    for k,v in pairs(rfids) do
+    for _,v in pairs(rfids) do
         if v["data"] == password then
             v["verified"] = true
         else
@@ -90,13 +87,13 @@ function detect_entities()
     local entities = e.scanEntities(64)
     local index = 1
 
-    for k,v in pairs(entity_widgets) do
-        for k,id in pairs(v) do
+    for _, v in pairs(entity_widgets) do
+        for _, id in pairs(v) do
             g.removeObject(id)
         end
     end
 
-    for k,v in pairs(entities) do
+    for _, v in pairs(entities) do
         entity_widgets[index] = {}
         local ent_name = v["name"]
         local cube_x = (v["x"]-terminal_coords["x"]) - 0.5
@@ -147,7 +144,7 @@ function myEventHandlers.modem_message(_, _, port, _, msg)
     end
 end
 
-function myEventHandlers.motion(_, x, y, z, entity_name)
+function myEventHandlers.motion(_, x, _, z, entity_name)
     local dot_x = motion_center["x"] - x*2
     local dot_y = motion_center["y"] - z*2
     local label_x = dot_x*2 - string.len(entity_name) * 2

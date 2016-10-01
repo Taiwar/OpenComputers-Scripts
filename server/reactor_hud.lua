@@ -3,30 +3,28 @@ local event = require "event"
 local serialization = require "serialization"
 local ghelper = require "glasses_helper"
 
-g = comp.glasses
-m = comp.modem
-s = comp.motion_sensor
+local g = comp.glasses
 
 g.removeAll()
 
-base_y = 40
-base_x = 10
-base_width = 130
-base_text_scale = 0.8
-primary_color = {1, 1, 1 }
---primary_color = {0.467, 0, 1 }
-primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
+local base_y = 40
+local base_x = 10
+local base_width = 130
+local base_text_scale = 0.8
+local primary_color = {1, 1, 1 }
+local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
 
-c_energy = 0
-waste_box = 0
-fuel_box = 0
+local c_energy = 0
+local waste_box = 0
+local fuel_box = 0
+local waste_info = 0
+local net_energy_info = 0
+local energy_box = 0
 r_capacity_end_box = 0
 r_capacity_start_box = 0
-energy_box = 0
 capacity_end_box = 0
 capacity_start_box = 0
-waste_info = 0
-net_energy_info = 0
+
 
 tab_functions = {
     [1] = function() os.execute("home_hud.lua") os.exit() end,
@@ -71,7 +69,6 @@ function initPowerDisplay(y)
     capacity_end_box.setPosition(base_x + base_width - 30, y-0.4)
     capacity_end_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
 
-    --energy_box.setColor(0.3019, 0.8196, 0.8745)
     energy_box.setColor(primary_color[1], primary_color[2] , primary_color[3])
     energy_box.setAlpha(0.9)
 end
@@ -87,7 +84,6 @@ function updateFuelDisplay(fuel, waste, capacity, consumption, y)
         waste_info.setText("Fuel status CRITICAL")
         waste_info.setColor(1, 0, 0)
     end
-    --local waste_percentage = tostring(waste_ratio*100).."%"
 
     waste_box.setSize(10, waste_width)
     waste_box.setPosition(base_x + fuel_width, y)
@@ -120,15 +116,15 @@ function calculateNetEnergy(curr_energy)
 end
 
 ghelper.bgBox(base_x - 4, base_y - 10, 46, base_width, primary_color_dark)
-reactor_headline = ghelper.headlineText("Reactor", base_x, base_y, base_width, base_text_scale, primary_color)
-production_info = ghelper.infoText("", base_x, base_y + 10, base_text_scale, primary_color)
-waste_info = ghelper.infoText("Fuel status:", base_x, base_y + 20, base_text_scale, primary_color)
+ghelper.headlineText("Reactor", base_x, base_y, base_width, base_text_scale, primary_color)
+local production_info = ghelper.infoText("", base_x, base_y + 10, base_text_scale, primary_color)
+ghelper.infoText("Fuel status:", base_x, base_y + 20, base_text_scale, primary_color)
 initFuelDisplay(base_y + 20)
 
 ghelper.bgBox(base_x - 4, base_y + 43, 46, base_width, primary_color_dark)
-capacitor_headline = ghelper.headlineText("CapacitorBank", base_x, base_y + 66, base_width, base_text_scale, primary_color)
-power_info = ghelper.infoText("", base_x, base_y + 76, base_text_scale, primary_color)
-net_energy_info = ghelper.infoText("", base_x, base_y + 86, base_text_scale, primary_color)
+ghelper.headlineText("CapacitorBank", base_x, base_y + 66, base_width, base_text_scale, primary_color)
+local power_info = ghelper.infoText("", base_x, base_y + 76, base_text_scale, primary_color)
+ghelper.infoText("", base_x, base_y + 86, base_text_scale, primary_color)
 initPowerDisplay(base_y + 73)
 
 production_info.setText("Waiting for signal")

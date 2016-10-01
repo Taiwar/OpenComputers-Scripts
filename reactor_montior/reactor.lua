@@ -1,13 +1,12 @@
-comp = require "component"
-event = require "event"
-serialization = require "serialization"
-m = comp.modem
-r = comp.br_reactor
-c = comp.capacitor_bank
-msg_data = {}
+local comp = require "component"
+local serialization = require "serialization"
+local m = comp.modem
+local r = comp.br_reactor
+local c = comp.capacitor_bank
+local msg_data = {}
 
-rod_count = r.getNumberOfControlRods()
-hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
+local rod_count = r.getNumberOfControlRods()
+local hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
 
 msg_data[9] = {}
 
