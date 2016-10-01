@@ -17,7 +17,7 @@ end
 
 function ghelper.headlineText(text, x_offset, y, box_width, scale, color)
     local label = g.addTextLabel()
-    label.setPosition(x_offset + box_width - string.len(text)/2+1, y)
+    label.setPosition(x_offset + box_width/2 - string.len(text), y)
     label.setScale(scale)
     label.setColor(color[1], color[2] , color[3])
     --label.setAlpha(0.8)
@@ -45,27 +45,14 @@ function ghelper.bgBox(x, y, height, width, color)
     return bg_group
 end
 
-function ghelper.createPanel(x, y, height, width, color)
-    local panel_group = {}
-    local text_x_offset = x + 4
+function ghelper.dot(x, y, scale, color)
+    local dot = g.addDot()
 
-    panel_group["bg_group"] = ghelper.bgBox(x, y, height, width, color)
+    dot.setPosition(x, y)
+    dot.setScale(scale)
+    dot.setColor(color[1], color[2] , color[3])
 
-    function panel_group.backpanel(self)
-        return self["bg_group"]
-    end
-
-    function panel_group.addText(self, text, position_index, scale)
-        self["text_group"][position_index] = ghelper.infoText(text, text_x_offset, y + position_index * 10, 1, sclae, color)
-        return self
-    end
-
-    function panel_group.addText(self, text, position_index, scale)
-        self["text_group"][position_index] = ghelper.infoText(text, text_x_offset, y + position_index * 10, 1, sclae, color)
-        return self
-    end
-
-    return panel_group
+    return dot
 end
 
 return ghelper

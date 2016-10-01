@@ -2,16 +2,16 @@ local comp = require "component"
 local event = require "event"
 local ghelper = require "glasses_helper"
 
-g = comp.glasses
-m = comp.modem
+local g = comp.glasses
+local m = comp.modem
 
-base_y = 40
-base_x = 10
-base_width = 130
-base_text_scale = 0.8
-primary_color = {1, 1, 1 }
---primary_color = {0.467, 0, 1 }
-primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
+local base_y = 40
+local base_x = 10
+local base_width = 130
+local base_text_scale = 0.8
+local primary_color = {1, 1, 1 }
+--local primary_color = {0.467, 0, 1 }
+local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
 
 time_text = ghelper.infoText("", base_x + base_width, base_y, base_text_scale, primary_color)
 time_text_id = time_text.getID()
@@ -35,4 +35,5 @@ while doTimeLoop == true do
     os.sleep(1)
 end
 
+event.ignore("modem_message", checkCallback)
 g.removeObject(time_text_id)
