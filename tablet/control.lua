@@ -17,7 +17,8 @@ function API.fillTable()
     API.setTable("Time", cmd_toggleTime, 41,51,3,5)
     API.setTable("Clear", cmd_clearHUD, 53,63,3,5)
     API.setTable("DroneLoop", cmd_toggleDroneLoop, 65,75,3,5)
-    API.setTable("Exit", cmd_exitHUD, 5,15,7,9)
+    API.setTable("LoadBase", cmd_loadBase, 5,15,7,9)
+    API.setTable("Exit", cmd_exitHUD, 17,27,7,9)
     API.screen()
 end
 
@@ -84,6 +85,16 @@ function cmd_toggleDroneLoop()
     end
 end
 
+function cmd_loadBase()
+    API.toggleButton("LoadBase")
+    if buttonStatus == false then
+        msg = 0
+        m.broadcast(8006, msg)
+    else
+        msg = 15
+        m.broadcast(8006, msg)
+    end
+end
 
 term.setCursorBlink(false)
 gpu.setResolution(80, 25)

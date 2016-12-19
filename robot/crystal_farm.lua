@@ -6,15 +6,17 @@ local comp = require "component"
 local ic = comp.inventory_controller
 local m = comp.modem
 local gen = comp.generator
+local rs = comp.redstone
 
 local in_side = sides.top
 local out_side = sides.front
+local refuel_side = sides.back
 local inv_size = ic.getInventorySize(in_side)
 
 local farmLoopDelay = 10
 local idleLoopDelay = 30
 
-local doFarmLoop = false
+doFarmLoop = false
 
 function checkInv()
     print("cataloging internal inv")
@@ -41,11 +43,6 @@ function checkInput()
                 robot.select(1)
                 ic.suckFromSlot(in_side, i)
                 gotCrystals = true
-            elseif stack["name"] == "minecraft:coal" then
-                print("found coal")
-                robot.select(16)
-                ic.suckFromSlot(in_side, i)
-                gen.insert()
             end
         end
     end
@@ -67,7 +64,7 @@ function storeCrystals(internal_inv)
     for k, v in pairs(internal_inv) do
         if v["name"] == "appliedenergistics2:item.ItemMultiMaterial" then
             robot.select(k)
-            ic.dropIntoSlot(out_side, k)
+            robot.drop(out_side)
         end
     end
 end
@@ -83,17 +80,39 @@ function collectSeeds()
     dropSeeds(checkInv())
 end
 
-function checkMsg(event_name, _, _, _, _, msg)
-    if event_name == "modem_message" then
-        print("got msg: " + msg)
-        doFarmLoop = msg
+function checkFuel()
+    local coal_count = gen.count()
+
+    if coal_count < 32 then
+        print("Refueling...")
+        rs.setOutput(refuel_side, 15)
+        os.sleep(16)
+        rs.setOutput(refuel_side, 0)
+
+        for i = 1, inv_size do
+            local stack = ic.getStackInSlot(in_side, i)
+            if stack ~= nil then
+                if stack["name"] == "minecraft:coal" then
+                    robot.select(16)
+                    ic.suckFromSlot(in_side, i)
+                    gen.insert()
+                end
+            end
+        end
+
+        print("success!")
     end
+end
+
+function checkMsg(_, _, _, _, _, msg)
+    doFarmLoop = msg
 end
 
 m.open(8003)
 event.listen("modem_message", checkMsg)
 
 while true do
+    checkFuel()
     if inv_size ~= nil then
         while doFarmLoop == true do
             print("farmLoop")

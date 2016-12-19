@@ -51,10 +51,6 @@ local entdetector_center = {
 
 m.open(8001)
 
-function initUI()
-
-end
-
 function checkRfids()
     local i = 1
     local player = {}
