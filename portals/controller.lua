@@ -76,6 +76,7 @@ function cmd_entered_char(char)
     else
         destination = char
     end
+    API.heading("Choose Destination: "..destination)
 end
 
 function cmd_done()
