@@ -15,22 +15,22 @@ function API.fillTable()
     API.clear()
     API.clearTable()
     if page == 0 then
-        API.setTable("Open", cmd_open, 5,15,3,5)
-        API.setTable("Close", cmd_close, 17,27,3,5)
-        API.setTable("Enter Dest", cmd_change_dest, 29,39,3,5)
+        API.setTable("Open", cmd_open, nil, 5,15,3,5)
+        API.setTable("Close", cmd_close, nil, 17,27,3,5)
+        API.setTable("Enter Dest", cmd_change_dest, nil, 29,39,3,5)
     else
-        API.setTable("nothing", nmbr_space, 17,27,15,17)
-        API.setTable("0", nmbr_0, 5,15,15,17)
-        API.setTable("1", nmbr_1, 5,15,3,5)
-        API.setTable("2", nmbr_2, 17,27,3,5)
-        API.setTable("3", nmbr_3, 29,39,3,5)
-        API.setTable("4", nmbr_4, 5,15,7,9)
-        API.setTable("5", nmbr_5, 17,27,7,9)
-        API.setTable("6", nmbr_6, 29,39,7,9)
-        API.setTable("7", nmbr_7, 5,15,11,13)
-        API.setTable("8", nmbr_8, 17,27,11,13)
-        API.setTable("9", nmbr_9, 29,39,11,13)
-        API.setTable("Done", cmd_done, 50,60,11,13)
+        API.setTable(" ", cmd_entered_char, " ", 17,27,15,17)
+        API.setTable("0", cmd_entered_char, "0", 5,15,15,17)
+        API.setTable("1", cmd_entered_char, "1", 5,15,3,5)
+        API.setTable("2", cmd_entered_char, "2", 17,27,3,5)
+        API.setTable("3", cmd_entered_char, "3", 29,39,3,5)
+        API.setTable("4", cmd_entered_char, "4", 5,15,7,9)
+        API.setTable("5", cmd_entered_char, "5", 17,27,7,9)
+        API.setTable("6", cmd_entered_char, "6", 29,39,7,9)
+        API.setTable("7", cmd_entered_char, "7", 5,15,11,13)
+        API.setTable("8", cmd_entered_char, "8", 17,27,11,13)
+        API.setTable("9", cmd_entered_char, "9", 29,39,11,13)
+        API.setTable("Done", cmd_done, nil, 50,60,11,13)
     end
     API.screen()
 end
@@ -69,102 +69,12 @@ function cmd_change_dest()
     API.heading("Choose Destination")
 end
 
-function nmbr_space()
-    API.flash("nothing",0.2)
+function cmd_entered_char(char)
+    API.flash(char, 0.2)
     if destination ~= "" then
-        destination = destination.." ".." "
+        destination = destination.." "..char
     else
-        destination = " "
-    end
-end
-
-function nmbr_0()
-    API.flash("0",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."0"
-    else
-        destination = "0"
-    end
-end
-
-function nmbr_1()
-    API.flash("1",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."1"
-    else
-        destination = "1"
-    end
-end
-
-function nmbr_2()
-    API.flash("2",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."2"
-    else
-        destination = "2"
-    end
-end
-
-function nmbr_3()
-    API.flash("3",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."3"
-    else
-        destination = "3"
-    end
-end
-
-function nmbr_4()
-    API.flash("4",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."4"
-    else
-        destination = "4"
-    end
-end
-
-function nmbr_5()
-    API.flash("5",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."5"
-    else
-        destination = "5"
-    end
-end
-
-function nmbr_6()
-    API.flash("6",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."6"
-    else
-        destination = "6"
-    end
-end
-
-function nmbr_7()
-    API.flash("7",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."7"
-    else
-        destination = "7"
-    end
-end
-
-function nmbr_8()
-    API.flash("8",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."8"
-    else
-        destination = "8"
-    end
-end
-
-function nmbr_9()
-    API.flash("9",0.2)
-    if destination ~= "" then
-        destination = destination.." ".."9"
-    else
-        destination = "9"
+        destination = char
     end
 end
 

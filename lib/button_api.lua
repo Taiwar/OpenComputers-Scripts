@@ -21,9 +21,10 @@ function API.clearTable()
     API.clear()
 end
 
-function API.setTable(name, func, xmin, xmax, ymin, ymax)
+function API.setTable(name, func, func_args, xmin, xmax, ymin, ymax)
     button[name] = {}
     button[name]["func"] = func
+    button[name]["func_args"] = func_args
     button[name]["active"] = false
     button[name]["xmin"] = xmin
     button[name]["ymin"] = ymin
@@ -67,7 +68,11 @@ function API.checkxy(x, y)
     for _, data in pairs(button) do
         if y>=data["ymin"] and  y <= data["ymax"] then
             if x>=data["xmin"] and x<= data["xmax"] then
-                data["func"]()
+                if data["func_args"] ~= nil then
+                    data["func"](data["func_args"])
+                else
+                    data["func"]()
+                end
                 return true
             end
         end
