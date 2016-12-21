@@ -1,3 +1,5 @@
+dofile( "/usr/lib/table-save.lua" )
+
 local comp = require "component"
 local dials = comp.list("ep_dialling_device")
 
@@ -8,7 +10,24 @@ local component = require("component")
 
 local gpu = component.gpu
 
-local destination = ""
+function save_dests(destinations)
+    assert( table.save( destinations, "destinations.lua" ) == nil )
+end
+
+function load_dests()
+    local dests, err = table.load( "destinations.lua" )
+    if err == nil then
+        return dests
+    end
+    return {}
+end
+
+local destinations = load_dests()
+local dests_amount = 0
+for _,_ in pairs(destinations) do
+    dests_amount = dests_amount + 1
+end
+
 local dest_length = 0
 local two_digits = false
 local page = 0
@@ -17,38 +36,27 @@ function API.fillTable()
     API.clear()
     API.clearTable()
     if page == 0 then
-        API.setTable("Open", cmd_open, nil, 5,15,3,5)
-        API.setTable("Close", cmd_close, nil, 17,27,3,5)
-        API.setTable("Enter Dest", cmd_change_dest, nil, 29,39,3,5)
-    else
-        API.label(5, 20, "Dest: ")
-        API.setTable(" ", cmd_entered_char, " ", 5,15,3,5)
-        API.setTable("0", cmd_entered_char, "0", 17,27,3,5)
-        API.setTable("1", cmd_entered_char, "1", 29,39,3,5)
-        API.setTable("2", cmd_entered_char, "2", 41,51,3,5)
-        API.setTable("3", cmd_entered_char, "3", 53,63,3,5)
+        API.heading("Portal Control")
+        API.setTable("Add", cmd_add_dest, nil, 70,78,22,24)
+        if next(destinations) ~= nil then
+            for k,v in pairs(destinations) do
+                API.setTable(v["name"], cmd_tp, v, 25,55,5 + (k-1)*2,5.5 + (k-1)*2)
+            end
+            API.label(5, 23, "Available Dests: "..dests_amount)
+            API.label(5, 23, "Available Dests: "..dests_amount)
+        else
+            API.label(30, 11, "No Destinations available")
+        end
+    elseif page == 1 then
+        API.heading("Enter Destination UID")
+        API.label(5, 20, "UID: ")
+        for i = 0, 26 do
+            API.setTable(tostring(i), cmd_entered_char, tostring(i), 5 + i*8 - math.floor(i/9) * 72, 11 + i*8  - math.floor(i/9) * 72, 3 + math.floor(i/9) * 4, 5 + math.floor(i/9) * 4)
+        end
 
-        API.setTable("4", cmd_entered_char, "4", 5,15,7,9)
-        API.setTable("5", cmd_entered_char, "5", 17,27,7,9)
-        API.setTable("6", cmd_entered_char, "6", 29,39,7,9)
-        API.setTable("7", cmd_entered_char, "7", 41,51,7,9)
-        API.setTable("8", cmd_entered_char, "8", 53,63,7,9)
-
-        API.setTable("9", cmd_entered_char, "9", 5,15,11,13)
-        API.setTable("10", cmd_entered_char, "10", 17,27,11,13)
-        API.setTable("11", cmd_entered_char, "11", 29,39,11,13)
-        API.setTable("12", cmd_entered_char, "12", 41,51,11,13)
-        API.setTable("13", cmd_entered_char, "13", 53,63,11,13)
-
-        API.setTable("14", cmd_entered_char, "14", 5,15,15,17)
-        API.setTable("15", cmd_entered_char, "15", 17,27,15,17)
-        API.setTable("16", cmd_entered_char, "16", 29,39,15,17)
-        API.setTable("17", cmd_entered_char, "17", 41,51,15,17)
-        API.setTable("18", cmd_entered_char, "18", 53,63,15,17)
-        API.setTable("19", cmd_entered_char, "19", 65,75,15,17)
-
-        API.setTable("Done", cmd_done, nil, 53,63,20,22)
-        API.setTable("Delete", cmd_delete, nil, 65,76,20,22)
+        API.setTable(" ", cmd_entered_char, " ", 41,51,20,22)
+        API.setTable("Delete", cmd_delete, nil, 53,63,20,22)
+        API.setTable("Done", cmd_done, nil, 65,76,20,22)
     end
     API.screen()
 end
@@ -64,29 +72,29 @@ function getClick()
     end
 end
 
-function cmd_open()
-    API.flash("Open",0.2)
+function cmd_tp(destination)
+    API.toggleButton(destination["name"])
     for adress in dials do
         local proxy = comp.proxy(adress)
-        proxy.dial(destination)
+        proxy.dial(destination["uid"])
     end
-end
-
-function cmd_close()
-    API.flash("Close",0.2)
+    os.sleep(5)
     for adress in dials do
         local proxy = comp.proxy(adress)
         proxy.terminate()
     end
+    API.toggleButton(destination["name"])
 end
 
-function cmd_change_dest()
+function cmd_add_dest()
     page = 1
-    destination = ""
+    dests_amount = dests_amount + 1
+    destinations[dests_amount] = {}
+    destinations[dests_amount]["uid"] = ""
+    destinations[dests_amount]["name"] = ""
     dest_length = 0
     two_digits = false
     API.fillTable()
-    API.heading("Choose Destination")
 end
 
 function cmd_entered_char(char)
@@ -98,46 +106,60 @@ function cmd_entered_char(char)
             two_digits = true
         end
         if dest_length ~= 0 then
-            destination = destination.." "..char
+            destinations[dests_amount]["uid"] = destinations[dests_amount]["uid"].." "..char
         else
-            destination = char
+            destinations[dests_amount]["uid"] = tostring(char)
         end
 
         dest_length = dest_length + 1
     else
-        API.label(5, 19, "Destination always contains 9 glyphs!")
+        API.label(5, 21, "UID always contains 9 glyphs!")
     end
-    API.label(5, 20, "Dest: "..destination)
+    API.label(5, 20, "UID: "..destinations[dests_amount]["uid"])
 end
 
 function cmd_done()
+    API.flash("Done", 0.2)
     if dest_length == 9 then
-        page = 0
-        API.fillTable()
-        API.heading("Portal Control: "..destination)
+        API.clearTable()
+        API.heading("Enter Name for: "..destinations[dests_amount]["uid"])
+        while true do
+            local _, char, code, _ = event.pull("key_down")
+            if code == 8 or char == 0 then
+                destinations[dests_amount]["name"] = string.sub(destinations[dests_amount]["name"], 1, #destinations[dests_amount]["name"]-1)
+            elseif code == 13 then
+                save_dests(destinations)
+                page = 0
+                API.fillTable()
+                break
+            elseif #destinations[dests_amount ]["name"] <=10 then
+                destinations[dests_amount]["name"] = destinations[dests_amount]["name"] .. string.char(code)
+            end
+            API.label(25, 10, destinations[dests_amount]["name"])
+            API.label(25, 20, "Press enter when finished")
+        end
     else
-        API.label(5, 21, "Destination always contains 9 glyphs!")
+        API.label(5, 21, "UID always contains 9 glyphs!")
     end
 end
 
 function cmd_delete()
     API.flash("Delete", 0.2)
     if dest_length ~= 0 and not two_digits then
-        destination = destination:sub(2, -2)
+        destinations[dests_amount ]["uid"] = destinations[dests_amount]["uid"]:sub(2, -2)
         dest_length = dest_length - 1
     elseif dest_length ~= 0 and two_digits then
-        destination = destination:sub(3, -2)
+        destinations[dests_amount]["uid"] = destinations[dests_amount]["uid"]:sub(3, -2)
         dest_length = dest_length - 1
     end
-    API.label(5, 20, "Dest: "..destination)
-    API.screen()
+    API.label(5, 20, "UID: "..destinations[dests_amount]["uid"])
 end
+
 
 term.setCursorBlink(false)
 gpu.setResolution(80, 25)
 API.clear()
 API.fillTable()
-API.heading("Portal Control")
 
 while true do
     getClick()
