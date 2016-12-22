@@ -16,7 +16,7 @@ local inv_size = ic.getInventorySize(in_side)
 local farmLoopDelay = 10
 local idleLoopDelay = 30
 
-doFarmLoop = false
+doFarmLoop = true
 
 function checkInv()
     print("cataloging internal inv")

@@ -40,7 +40,8 @@ function API.fillTable()
         API.setTable("Add", cmd_add_dest, nil, 70,78,22,24)
         if next(destinations) ~= nil then
             for k,v in pairs(destinations) do
-                API.setTable(v["name"], cmd_tp, v, 25,55,5 + (k-1)*2,5.5 + (k-1)*2)
+                API.setTable(v["name"], cmd_tp, v, 15,65,5 + (k-1)*2,5.5 + (k-1)*2)
+                API.setTable("Del "..k, cmd_delete_dest, k, 67,70,5 + (k-1)*2,5.5 + (k-1)*2)
             end
             API.label(5, 23, "Available Dests: "..dests_amount)
             API.label(5, 23, "Available Dests: "..dests_amount)
@@ -70,6 +71,17 @@ function getClick()
     else
         API.checkxy(x,y)
     end
+end
+
+function cmd_delete_dest(dest_key)
+    if destinations[dest_key + 1] == nil then
+        destinations[dest_key] = nil
+    else
+        destinations[dest_key] = destinations[dest_key + 1]
+        destinations[dest_key + 1] = nil
+    end
+    save_dests(destinations)
+    API.fillTable()
 end
 
 function cmd_tp(destination)
@@ -132,7 +144,7 @@ function cmd_done()
                 page = 0
                 API.fillTable()
                 break
-            elseif #destinations[dests_amount ]["name"] <=10 then
+            elseif #destinations[dests_amount ]["name"] <=30 then
                 destinations[dests_amount]["name"] = destinations[dests_amount]["name"] .. string.char(code)
             end
             API.label(25, 10, destinations[dests_amount]["name"])
