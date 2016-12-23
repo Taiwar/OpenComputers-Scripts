@@ -116,6 +116,7 @@ while true do
     if inv_size ~= nil then
         while doFarmLoop == true do
             print("farmLoop")
+        --TODO: Collect/Drop seeds if any in inv, some are getting stuck because of the loop below
             if checkInput() == true then
                 collectSeeds()
                 dropSeeds(checkInv())

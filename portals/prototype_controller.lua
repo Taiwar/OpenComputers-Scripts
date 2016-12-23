@@ -9,6 +9,11 @@ local gpu = comp.gpu
 local adresses = comp.list("screen")
 local screen = {}
 
+print("Enter Resolution")
+term.write("X: ")
+local screen_x = tonumber(term.read())
+term.write("Y: ")
+local screen_y = tonumber(term.read())
 term.clear()
 print("Select touchscreen:")
 local loop_tracker = 1
@@ -26,7 +31,7 @@ end
 local secondaryScreen = screen[tonumber(term.read())]
 term.clear()
 gpu.bind(primaryScreen)
-gpu.setResolution(160, 50)
+gpu.setResolution(screen_x, screen_y)
 
 function save_dests(destinations)
     assert( table.save( destinations, "destinations.lua" ) == nil )
@@ -55,12 +60,12 @@ function API.fillTable()
     API.clearTable()
     if page == 0 then
         API.heading("Portal Control")
-        API.setTable("Exit", cmd_exit, nil, 140,156,2,4)
-        API.setTable("Add", cmd_add_dest, nil, 140,156,44,48)
+        API.setTable("Exit", cmd_exit, nil, screen_x-14,screen_x-4,2,4)
+        API.setTable("Add", cmd_add_dest, nil, screen_x-14,screen_x-4,screen_y-8,screen_y-4)
         if next(destinations) ~= nil then
             for k,v in pairs(destinations) do
-                API.setTable(v["name"], cmd_tp, v, 30,130,10 + (k-1)*4,11 + (k-1)*4)
-                API.setTable("Del "..k, cmd_delete_dest, k, 134,140,10 + (k-1)*4,11 + (k-1)*4)
+                API.setTable(v["name"], cmd_tp, v, (screen_x - screen_x*0.9),(screen_x*0.85), 5 + (k-1)*(screen_y/15), 6 + (k-1)*(screen_y/15))
+                API.setTable("Del "..k, cmd_delete_dest, k, (screen_x*0.85) + 2,(screen_x*0.85) + 8, 5 + (k-1)*(screen_y/15), 6 + (k-1)*(screen_y/15))
             end
             API.label(2, 50, "Available Dests: "..dests_amount)
         else
@@ -70,12 +75,12 @@ function API.fillTable()
         API.heading("Enter Destination UID")
         API.label(10, 40, "UID: ")
         for i = 0, 26 do
-            API.setTable(tostring(i), cmd_entered_char, tostring(i), 10 + i*16 - math.floor(i/9) * 144, 22 + i*16  - math.floor(i/9) * 144, 5 + math.floor(i/9) * 12, 10 + math.floor(i/9) * 12)
+            API.setTable(tostring(i), cmd_entered_char, tostring(i), 10 + i*(screen_x/10) - math.floor(i/9) * (screen_x - 6), 22 + i*(screen_x/10)  - math.floor(i/9) * (screen_x - 6), 5 + math.floor(i/9) * (screen_y/10 * 2), 10 + math.floor(i/9) * (screen_y/10 * 2))
         end
 
-        API.setTable(" ", cmd_entered_char, " ", 82,102,40,44)
-        API.setTable("Delete", cmd_delete, nil, 106,126,40,44)
-        API.setTable("Done", cmd_done, nil, 130,152,40,44)
+        API.setTable(" ", cmd_entered_char, " ", screen_x-42,screen_x-32,screen_y-8,screen_y-4)
+        API.setTable("Delete", cmd_delete, nil, screen_x-28,screen_x-18,screen_y-8,screen_y-4)
+        API.setTable("Done", cmd_done, nil, screen_x-14,screen_x-4,screen_y-8,screen_y-4)
     end
     API.screen()
 end
@@ -95,7 +100,7 @@ function cmd_exit()
     API.clear()
     term.clear()
     gpu.bind(secondaryScreen)
-    gpu.setResolution(160, 50)
+    gpu.setResolution(screen_x, screen_y)
     os.exit()
 end
 
@@ -163,7 +168,7 @@ function cmd_done()
         API.clearTable()
         API.label(50, 20, "!Enter name for new destination on screen with keyboard!")
         gpu.bind(secondaryScreen)
-        gpu.setResolution(160, 50)
+        gpu.setResolution(screen_x, screen_y)
         API.clearTable()
         API.heading("Enter Name for: "..destinations[dests_amount]["uid"])
         while true do
@@ -173,7 +178,7 @@ function cmd_done()
             elseif code == 13 then
                 term.clear()
                 gpu.bind(primaryScreen)
-                gpu.setResolution(160, 50)
+                gpu.setResolution(screen_x, screen_y)
                 save_dests(destinations)
                 page = 0
                 API.fillTable()
@@ -203,7 +208,6 @@ end
 
 
 term.setCursorBlink(false)
-gpu.setResolution(160, 50)
 API.clear()
 API.fillTable()
 
