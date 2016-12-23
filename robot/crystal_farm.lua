@@ -64,7 +64,9 @@ function storeCrystals(internal_inv)
     for k, v in pairs(internal_inv) do
         if v["name"] == "appliedenergistics2:item.ItemMultiMaterial" then
             robot.select(k)
-            robot.drop(out_side)
+            while robot.drop(out_side) do
+                robot.drop(out_side)
+            end
         end
     end
 end
@@ -83,7 +85,7 @@ end
 function checkFuel()
     local coal_count = gen.count()
 
-    if coal_count < 32 then
+    if coal_count < 8 then
         print("Refueling...")
         rs.setOutput(refuel_side, 15)
         os.sleep(16)
@@ -116,11 +118,9 @@ while true do
     if inv_size ~= nil then
         while doFarmLoop == true do
             print("farmLoop")
-        --TODO: Collect/Drop seeds if any in inv, some are getting stuck because of the loop below
             if checkInput() == true then
-                collectSeeds()
                 dropSeeds(checkInv())
-                event.timer(140, collectSeeds)
+                event.timer(120, collectSeeds)
             end
             os.sleep(farmLoopDelay)
         end
