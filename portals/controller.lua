@@ -2,12 +2,14 @@ dofile( "/usr/lib/table-save.lua" )
 
 local comp = require("component")
 local dials = comp.list("ep_dialling_device")
+local ed = comp.os_entdetector
 API = require("button_api")
 local event = require("event")
 local term = require("term")
 local gpu = comp.gpu
 local adresses = comp.list("screen")
 local screen = {}
+local internet = require("internet")
 
 term.clear()
 print("Select touchscreen:")
@@ -29,7 +31,11 @@ gpu.bind(primaryScreen)
 --gpu.setResolution(160, 50)
 
 function save_dests(destinations)
-    assert( table.save( destinations, "destinations.lua" ) == nil )
+    assert(table.save(destinations, "destinations.lua" ) == nil)
+end
+
+function save_trespassers(trespassers)
+    assert(table.save(trespassers, "trespassers.lua" ) == nil)
 end
 
 function load_dests()
@@ -40,10 +46,25 @@ function load_dests()
     return {}
 end
 
+function load_trespassers()
+    local tps, err = table.load( "trespassers.lua" )
+    if err == nil then
+        return tps
+    end
+    return {}
+end
+
 local destinations = load_dests()
+local trespassers = load_trespassers()
+
 local dests_amount = 0
 for _,_ in pairs(destinations) do
     dests_amount = dests_amount + 1
+end
+
+local tps_amount = 0
+for _,_ in pairs(trespassers) do
+    tps_amount = tps_amount + 1
 end
 
 local dest_length = 0
@@ -116,6 +137,7 @@ function cmd_tp(destination)
     for adress in dials do
         local proxy = comp.proxy(adress)
         proxy.dial(destination["uid"])
+        monitor_trespassers(destination["name"])
     end
     os.sleep(5)
     for adress in dials do
@@ -123,6 +145,19 @@ function cmd_tp(destination)
         proxy.terminate()
     end
     API.toggleButton(destination["name"])
+end
+
+function monitor_trespassers(dest_name)
+    tps_amount = tps_amount + 1
+    trespassers[tps_amount] = {}
+    local players = ed.scanPlayers(64)
+    trespassers[tps_amount]["names"] = ""
+    trespassers[tps_amount]["destination"] = dest_name
+    for _, v in pairs(players) do
+       trespassers[tps_amount]["names"] = trespassers[tps_amount]["names"].." "..v["name"]
+    end
+    trespassers[tps_amount]["time"] =  internet.request("http://www.timeapi.org/cet/now")()
+    save_trespassers(trespassers)
 end
 
 function cmd_add_dest()
