@@ -15,9 +15,9 @@ local base_text_scale = 0.8
 local primary_color = {1, 1, 1 }
 local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
 
-tab_functions = {
+local tab_functions = {
     [1] = function() os.execute("home_hud.lua") os.exit() end,
-    [2] = function() os.execute("reactor_hud.lua") os.exit() end,
+    [2] = function() os.execute("draconic_energy_sphere.lua") os.exit() end,
     [3] = function() os.execute("entity_sensor_hud.lua") os.exit() end,
     [4] = function() os.execute("time_widget.lua") end,
     [5] = function() g.removeAll() end,

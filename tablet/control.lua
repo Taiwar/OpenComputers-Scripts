@@ -12,12 +12,11 @@ local hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
 
 function API.fillTable()
     API.setTable("Home", cmd_showHome, 5,15,3,5)
-    API.setTable("Reactor", cmd_showReactor, 17,27,3,5)
+    API.setTable("Energy", cmd_showEnergy, 17,27,3,5)
     API.setTable("Sensors", cmd_showSensors, 29,39,3,5)
     API.setTable("Time", cmd_toggleTime, 41,51,3,5)
     API.setTable("Clear", cmd_clearHUD, 53,63,3,5)
     API.setTable("DroneLoop", cmd_toggleDroneLoop, 65,75,3,5)
-    API.setTable("LoadBase", cmd_loadBase, 5,15,7,9)
     API.setTable("Exit", cmd_exitHUD, 17,27,7,9)
     API.screen()
 end
@@ -40,8 +39,8 @@ function cmd_showHome()
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end
 
-function cmd_showReactor()
-    API.flash("Reactor",0.05)
+function cmd_showEnergy()
+    API.flash("Energy",0.05)
     msg[1] = 2
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end

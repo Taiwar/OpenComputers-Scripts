@@ -114,11 +114,12 @@ m.open(8003)
 event.listen("modem_message", checkMsg)
 
 while true do
-    checkFuel()
+    --checkFuel()
     if inv_size ~= nil then
         while doFarmLoop == true do
             print("farmLoop")
             if checkInput() == true then
+                collectSeeds()
                 dropSeeds(checkInv())
                 event.timer(120, collectSeeds)
             end
