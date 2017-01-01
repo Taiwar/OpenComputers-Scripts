@@ -156,8 +156,9 @@ function monitor_trespassers(dest_name)
     for _, v in pairs(players) do
        trespassers[tps_amount]["names"] = trespassers[tps_amount]["names"].." "..v["name"]
     end
-    trespassers[tps_amount]["time"] =  internet.request("http://www.timeapi.org/cet/now")()
+    trespassers[tps_amount]["time"] =  pcall(internet.request("http://www.timeapi.org/cet/now")())
     save_trespassers(trespassers)
+    internet.request("https://muellersites.net/testsites/oc_api.php", {players = trespassers[tps_amount]["names"], destination = trespassers[tps_amount]["destination"], timestamp = trespassers[tps_amount]["time"]})
 end
 
 function cmd_add_dest()
