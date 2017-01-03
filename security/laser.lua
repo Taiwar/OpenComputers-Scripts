@@ -16,33 +16,6 @@ function init()
 end
 
 function lockOn(targetX, targetY, targetZ, targetDistance)
-    local angleOffset;
-    if targetZ < 0 then
-        if targetX < 0 then
-            angleOffset = 1.5 * math.pi
-            targetX = -targetX
-            targetZ = -targetZ
-        else
-            angleOffset = 0
-            targetZ = -targetZ
-        end
-    else
-        if targetX < 0 then
-            angleOffset = math.pi
-            targetX = -targetX
-        else
-            angleOffset = 0.5 * math.pi
-        end
-    end
-    local XAngle = math.atan(targetX/targetZ)
-    print("Laser: X", math.deg(XAngle))
-    local YAngle = math.sin((targetY-1)/targetDistance)
-    print("Laser: Y", math.deg(YAngle))
-    if angleOffset == 90 or angleOffset == 270 then
-        turret.moveTo(((90-math.deg(XAngle))+angleOffset), math.deg(YAngle))
-    else
-        turret.moveTo((math.deg(XAngle)+angleOffset), math.deg(YAngle))
-    end
 end
 
 function handleTargets(_, players_msg)
