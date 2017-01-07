@@ -71,10 +71,6 @@ function checkRfids()
     return player
 end
 
-function compareData(motion, rfids)
-
-end
-
 function unknownEvent()
 
 end
