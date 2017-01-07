@@ -120,24 +120,12 @@ function cleanExit()
     print("exiting")
 end
 
-local tab_functions = {
-    [1] = function() cleanExit() os.execute("home_hud.lua") end,
-    [2] = function() cleanExit() os.execute("reactor_hud.lua") end,
-    [3] = function() cleanExit() os.execute("entity_sensor_hud.lua") end,
-    [4] = function() cleanExit() os.execute("time_widget.lua") end,
-    [5] = function() g.removeAll() end,
-    [6] = function() g.removeAll() cleanExit() end
-}
-
 local myEventHandlers = setmetatable({}, { __index = function() return unknownEvent end })
 
-function myEventHandlers.modem_message(_, _, port, _, msg)
-    local msg = serialization.unserialize(msg)
-
-    if port == 8001 then
-        print("executing function: "..msg[1])
-        tab_functions[msg[1]]()
-    end
+function myEventHandlers.closeWidget(_, _)
+    event.cancel(entity_detect_timer)
+    event.ignore("closeWidget")
+    os.exit()
 end
 
 function myEventHandlers.motion(_, x, _, z, entity_name)

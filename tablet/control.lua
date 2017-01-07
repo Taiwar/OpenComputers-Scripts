@@ -1,4 +1,4 @@
-API = require("button_api")
+local API = require("button_api")
 local event = require("event")
 local term = require("term")
 local component = require("component")
@@ -8,16 +8,16 @@ local m = component.modem
 local gpu = component.gpu
 
 local msg = {}
-local hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
+local hub_adress = "0d9e514c-590c-4200-9cca-1c62da04e044"
 
 function API.fillTable()
-    API.setTable("Home", cmd_showHome, 5,15,3,5)
-    API.setTable("Energy", cmd_showEnergy, 17,27,3,5)
-    API.setTable("Sensors", cmd_showSensors, 29,39,3,5)
-    API.setTable("Time", cmd_toggleTime, 41,51,3,5)
-    API.setTable("Clear", cmd_clearHUD, 53,63,3,5)
-    API.setTable("DroneLoop", cmd_toggleDroneLoop, 65,75,3,5)
-    API.setTable("Exit", cmd_exitHUD, 5,15,7,9)
+    API.setTable("Home", cmd_showHome, nil, 5,15,3,5)
+    API.setTable("Energy", cmd_showEnergy, nil, 17,27,3,5)
+    API.setTable("Sensors", cmd_showSensors, nil, 29,39,3,5)
+    API.setTable("Time", cmd_toggleTime, nil, 41,51,3,5)
+    API.setTable("Clear", cmd_clearHUD, nil, 53,63,3,5)
+    API.setTable("DroneLoop", cmd_toggleDroneLoop, nil, 65,75,3,5)
+    API.setTable("Exit", cmd_exitHUD, nil, 5,15,7,9)
     API.screen()
 end
 
@@ -96,7 +96,7 @@ function cmd_loadBase()
 end
 
 term.setCursorBlink(false)
-gpu.setResolution(80, 25)
+API.setRes(80, 25)
 API.clear()
 API.fillTable()
 API.heading("Glasses Control")

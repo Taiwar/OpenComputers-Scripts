@@ -20,20 +20,10 @@ local fuel_box = 0
 local waste_info = 0
 local net_energy_info = 0
 local energy_box = 0
-r_capacity_end_box = 0
-r_capacity_start_box = 0
-capacity_end_box = 0
-capacity_start_box = 0
-
-
-tab_functions = {
-    [1] = function() os.execute("home_hud.lua") os.exit() end,
-    [2] = function() os.execute("reactor_hud.lua") os.exit() end,
-    [3] = function() os.execute("entity_sensor_hud.lua") os.exit() end,
-    [4] = function() os.execute("time_widget.lua") end,
-    [5] = function() g.removeAll() end,
-    [6] = function() g.removeAll() os.exit() end
-}
+local r_capacity_end_box = 0
+local r_capacity_start_box = 0
+local capacity_end_box = 0
+local capacity_start_box = 0
 
 function initFuelDisplay(y)
     waste_box = g.addRect()
@@ -57,18 +47,10 @@ function initFuelDisplay(y)
 end
 
 function initPowerDisplay(y)
+    capacity_start_box = ghelper.rect(base_x - 0.8, y-0.4, 10.8, 0.8, primary_color_dark)
+    capacity_end_box = ghelper.rect(base_x + base_width - 30, y-0.4, 10.8, 0.8, primary_color_dark)
+
     energy_box = g.addRect()
-    capacity_end_box = g.addRect()
-    capacity_start_box = g.addRect()
-
-    capacity_start_box.setSize(10.8, 0.8)
-    capacity_start_box.setPosition(base_x - 0.8, y-0.4)
-    capacity_start_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
-
-    capacity_end_box.setSize(10.8, 0.8)
-    capacity_end_box.setPosition(base_x + base_width - 30, y-0.4)
-    capacity_end_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
-
     energy_box.setColor(primary_color[1], primary_color[2] , primary_color[3])
     energy_box.setAlpha(0.9)
 end
@@ -115,19 +97,25 @@ function calculateNetEnergy(curr_energy)
     c_energy = curr_energy
 end
 
-ghelper.bgBox(base_x - 4, base_y - 10, 46, base_width, primary_color_dark)
-ghelper.headlineText("Reactor", base_x, base_y, base_width, base_text_scale, primary_color)
-local production_info = ghelper.infoText("", base_x, base_y + 10, base_text_scale, primary_color)
-ghelper.infoText("Fuel status:", base_x, base_y + 20, base_text_scale, primary_color)
+local reactor_box = ghelper.bgBox(base_x - 4, base_y - 10, 46, base_width, primary_color, primary_color_dark)
+reactor_box.setHeadline("Reactor", base_text_scale, primary_color)
+local production_info = reactor_box.addText("", 1, 10, base_text_scale, primary_color)
+local fuel_info = reactor_box.addText("Fuel status:", 1, 20, base_text_scale, primary_color)
 initFuelDisplay(base_y + 20)
 
-ghelper.bgBox(base_x - 4, base_y + 43, 46, base_width, primary_color_dark)
-ghelper.headlineText("CapacitorBank", base_x, base_y + 66, base_width, base_text_scale, primary_color)
-local power_info = ghelper.infoText("", base_x, base_y + 76, base_text_scale, primary_color)
-ghelper.infoText("", base_x, base_y + 86, base_text_scale, primary_color)
+local capacitor_box = ghelper.bgBox(base_x - 4, base_y + 43, 46, base_width, primary_color, primary_color_dark)
+capacitor_box.setHeadline("Capacitor", base_text_scale, primary_color)
+local power_info = capacitor_box.addText("", 1, 76, base_text_scale, primary_color)
 initPowerDisplay(base_y + 73)
 
 production_info.setText("Waiting for signal")
+
+function cleanExit(_, _)
+    event.ignore("closeWidget")
+    os.exit()
+end
+
+event.listen("closeWidget", cleanExit)
 
 while true do
     local _, _, _, port, _, message = event.pull("modem_message")
@@ -143,9 +131,6 @@ while true do
         else
             production_info.setText("Reactor offline")
         end
-    elseif port == 8001 then
-        print("executing function: "..msg[1])
-        tab_functions[msg[1]]()
     end
 end
 

@@ -16,17 +16,8 @@ local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, prim
 
 local c_energy = 0
 local energy_box = 0
-capacity_end_box = 0
-capacity_start_box = 0
-
-
-local tab_functions = {
-    [1] = function() os.execute("home_hud.lua") os.exit() end,
-    [3] = function() os.execute("entity_sensor_hud.lua") os.exit() end,
-    [4] = function() os.execute("time_widget.lua") end,
-    [5] = function() g.removeAll() end,
-    [6] = function() g.removeAll() os.exit() end
-}
+local capacity_end_box = 0
+local capacity_start_box = 0
 
 function roundTo(nmbr, digits)
     local shift = 10 ^ digits
@@ -58,6 +49,13 @@ function updatePowerDisplay(energy, capacity, y)
     energy_box.setPosition(base_x, y)
 end
 
+local box = ghelper.bgBox(base_x - 4, base_y - 10, 45, base_width, primary_color_dark, primary_color)
+box.setHeadline("Energy", base_text_scale, primary_color)
+local power_info = box.addText("", 1, 10, base_text_scale, primary_color)
+local net_energy_info = box.addText("", 1, 20, base_text_scale, primary_color)
+initPowerDisplay(base_y + 20)
+power_info.setText("Waiting for signal")
+
 function calculateNetEnergy(curr_energy)
     local energy_dif = curr_energy - c_energy
 
@@ -73,12 +71,12 @@ function calculateNetEnergy(curr_energy)
     c_energy = curr_energy
 end
 
-ghelper.bgBox(base_x - 4, base_y - 10, 45, base_width, primary_color_dark)
-ghelper.headlineText("Energy", base_x, base_y, base_width, base_text_scale, primary_color)
-local power_info = ghelper.infoText("", base_x, base_y + 10, base_text_scale, primary_color)
-net_energy_info = ghelper.infoText("", base_x, base_y + 20, base_text_scale, primary_color)
-initPowerDisplay(base_y + 20)
-power_info.setText("Waiting for signal")
+function cleanExit(_, _)
+    event.ignore("closeWidget")
+    os.exit()
+end
+
+event.listen("closeWidget", cleanExit)
 
 while true do
     local _, _, _, port, _, message = event.pull("modem_message")
@@ -88,9 +86,6 @@ while true do
         power_info.setText("Energy stored in GRF: "..roundTo(msg[1]/1000000000, 2))
         calculateNetEnergy(msg[1])
         updatePowerDisplay(msg[1], msg[2], base_y + 20)
-    elseif port == 8001 then
-        print("executing function: "..msg[1])
-        tab_functions[msg[1]]()
     end
 end
 
