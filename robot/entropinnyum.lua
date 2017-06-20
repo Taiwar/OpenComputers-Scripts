@@ -5,9 +5,11 @@ local comp = require "component"
 -- local computer = require "computer"
 
 local rs = comp.redstone
+local ic = comp.inventory_controller
 
 local rs_in_side = sides.front
 local rs_out_side = sides.bottom
+local tnt_in_side = sides.top
 -- local charger_side = sides.left
 local flowerTimerDelay = 5
 
@@ -59,7 +61,8 @@ end
 
 function light_tnt()
     robot.select(1)
-    robot.suckUp(1)
+    -- robot.suckUp(1)
+    ic.suckFromSlot(tnt_in_side, 1, 1)
     robot.placeDown()
     rs.setOutput(rs_out_side, 15)
     rs.setOutput(rs_out_side, 0)
