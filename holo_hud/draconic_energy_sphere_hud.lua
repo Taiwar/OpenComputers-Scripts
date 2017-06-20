@@ -49,7 +49,7 @@ function updatePowerDisplay(energy, capacity, y)
     energy_box.setPosition(base_x, y)
 end
 
-local box = ghelper.bgBox(base_x - 4, base_y - 10, 45, base_width, primary_color_dark, primary_color)
+local box = ghelper.bgBox(base_x - 4, base_y - 10, base_width, 45, primary_color_dark, primary_color)
 box.setHeadline("Energy", base_text_scale, primary_color)
 local power_info = box.addText("", 1, 10, base_text_scale, primary_color)
 local net_energy_info = box.addText("", 1, 20, base_text_scale, primary_color)

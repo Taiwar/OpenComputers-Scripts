@@ -7,7 +7,7 @@ local g = comp.glasses
 
 g.removeAll()
 
-local box = ghelper.bgBox(10, 40, 45, 100, {1, 1, 1}, {0.1, 0.1, 0.1})
+local box = ghelper.bgBox(10, 40, 100, 45, {1, 1, 1}, {0.1, 0.1, 0.1})
 box.setHeadline("Geoscanner", 0.9, {1, 1, 1})
 local info = box.addText("inactive", 5, 5 , 0.8, {0, 1, 0})
 

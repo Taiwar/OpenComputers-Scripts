@@ -97,7 +97,7 @@ function calculateNetEnergy(curr_energy)
     c_energy = curr_energy
 end
 
-local reactor_box = ghelper.bgBox(base_x - 4, base_y - 10, 46, base_width, primary_color, primary_color_dark)
+local reactor_box = ghelper.bgBox(base_x - 4, base_y - 10, base_width, 45, primary_color, primary_color_dark)
 reactor_box.setHeadline("Reactor", base_text_scale, primary_color)
 local production_info = reactor_box.addText("", 1, 10, base_text_scale, primary_color)
 local fuel_info = reactor_box.addText("Fuel status:", 1, 20, base_text_scale, primary_color)

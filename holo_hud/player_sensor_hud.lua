@@ -145,7 +145,7 @@ function handleEvent(eventID, ...)
     end
 end
 
-ghelper.bgBox(base_x - 4, base_y - 10, 100, base_width, primary_color_dark)
+ghelper.bgBox(base_x - 4, base_y - 10, base_width, 100, primary_color_dark)
 ghelper.headlineText("Sensor Grid", base_x, base_y, base_width, base_text_scale, primary_color)
 ghelper.dot(motion_center["x"], motion_center["y"], 3, primary_color)
 ghelper.dot(entdetector_center["x"], entdetector_center["y"], 3, primary_color)
