@@ -22,4 +22,4 @@ local box = ghelper.bgBox(30, 30, 45, 100, {0.95, 0.95, 0.95}, {0.1, 0.1, 0.1}) 
 local headline = box.setHeadline("headline", 0.9, {1, 0, 0}) --Params: text, scale, color (x is calculated, y is one line below front panel)
 local info = box.addText("info", 10, 10 , 0.8, {0, 1, 0}) --Params: text, x, y, color
 ```
-![](http://imgur.com/Uodi0WR)
+![](https://i.imgur.com/Uodi0WR.png)
