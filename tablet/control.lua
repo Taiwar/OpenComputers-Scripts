@@ -8,7 +8,7 @@ local m = component.modem
 local gpu = component.gpu
 
 local msg = {}
-local hub_adress = "0d9e514c-590c-4200-9cca-1c62da04e044"
+local hub_adress = "c4f7e17c-a067-472d-af84-f86bd5c625da"
 
 function API.fillTable()
     API.setTable("Home", cmd_showHome, nil, 5,15,3,5)

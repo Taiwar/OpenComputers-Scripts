@@ -4,7 +4,7 @@ local m = comp.modem
 local drs = comp.draconic_rf_storage
 local msg_data = {}
 
-local hub_adress = "13d9efb3-05a5-4cef-b40d-1fde878df1ab"
+local hub_adress = "c4f7e17c-a067-472d-af84-f86bd5c625da"
 
 while true do
     msg_data[1] = drs.getEnergyStored()

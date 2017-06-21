@@ -2,7 +2,7 @@ local robot = require "robot"
 local sides = require "sides"
 local event = require "event"
 local comp = require "component"
--- local computer = require "computer"
+local computer = require "computer"
 
 local rs = comp.redstone
 local ic = comp.inventory_controller
@@ -11,7 +11,8 @@ local rs_in_side = sides.front
 local rs_out_side = sides.bottom
 local tnt_in_side = sides.top
 -- local charger_side = sides.left
-local flowerTimerDelay = 5
+local flowerTimerDelay = 10
+local flowers = 2
 
 local timer
 
@@ -30,25 +31,28 @@ function eventHandlers.redstone_changed(_, side, _, newValue)
     end
 end
 
-function handleTimer()
+function eventHandlers.flowerTimer()
     print("handling timer event, timer: "..flowerTimer - 1)
     flowerTimer = flowerTimer - 1
     if flowerTimer < 0 then
         print("setting flowerTimer to: "..flowerTimerDelay)
         flowerTimer = flowerTimerDelay
-        print("lighting tnt")
-        light_tnt()
+        for i = 1, flowers do
+            print("lighting tnt")
+            light_tnt()
+            os.sleep(4)
+        end
     end
     -- if computer.energy() < 0.5 * computer.maxEnergy() then
     --    rs.setOutput(charger_side, 15)
     -- else
     --    rs.setOutput(charger_side, 0)
     -- end
-    timer = event.timer(1, handleTimer)
+    timer = event.timer(1, function() computer.pushSignal("flowerTimer") end)
 end
 
 function handleEvent(eventID, ...)
-    if (eventID) and eventID == "modem_message" or eventID == "redstone_changed" or eventID == "timer" then
+    if (eventID) and eventID == "modem_message" or eventID == "redstone_changed" or eventID == "flowerTimer" then
         print("got event: "..eventID)
         eventHandlers[eventID](...)
     end
@@ -68,7 +72,7 @@ function light_tnt()
     rs.setOutput(rs_out_side, 0)
 end
 
-timer = event.timer(1, handleTimer)
+timer = event.timer(1, function() computer.pushSignal("flowerTimer") end)
 
 while true do
     handleEvent(event.pull())

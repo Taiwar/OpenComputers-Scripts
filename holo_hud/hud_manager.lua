@@ -14,12 +14,23 @@ local tab_functions = {
     [3] = function() switchTo("entity_sensor_hud.lua") end,
     [4] = function() os.execute("time_widget.lua") end,
     [5] = function() g.removeAll() end,
-    [6] = function() computer.pushSignal("closeWidget") g.removeAll() os.exit() end
+    [6] = cleanExit
 }
 
 function switchTo(script_name)
     computer.pushSignal("closeWidget")
     os.execute(script_name)
+end
+
+
+function cleanExit()
+    computer.pushSignal("closeWidget")
+    g.removeAll()
+    event.ignore("modem_message")
+    m.close(8000)
+    m.close(8001)
+    m.close(8002)
+    os.exit()
 end
 
 function executeFunction(_, _, _, port, _, packet)

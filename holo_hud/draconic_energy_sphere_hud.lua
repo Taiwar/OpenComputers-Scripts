@@ -11,7 +11,7 @@ local base_y = 40
 local base_x = 10
 local base_width = 125
 local base_text_scale = 0.8
-local primary_color = {1, 1, 1 }
+local primary_color = {1, 1, 1}
 local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, primary_color[3] - 0.2}
 
 local c_energy = 0
