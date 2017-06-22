@@ -12,9 +12,15 @@ local rs_out_side = sides.bottom
 local tnt_in_side = sides.top
 -- local charger_side = sides.left
 local flowerTimerDelay = 10
-local flowers = 2
+
+local flowers = 2 -- Change to your amount of entropinnyum flowers in the area
+local continous_tnt = false -- ONLY change this when you're sure your spreader/flowers can handle it!
 
 local timer
+
+-- Script to automatically drop and light tnt to feed entropinyum flowers, when the robot doesn't get a redstone signal
+-- for some time (the idea is, that the signal comes from a mana burst detector, that detects if the flowers still
+-- hold/transmit mana
 
 feedFlower = true
 local flowerTimer = flowerTimerDelay
@@ -75,6 +81,12 @@ end
 timer = event.timer(1, function() computer.pushSignal("flowerTimer") end)
 
 while true do
-    handleEvent(event.pull())
+    if not continous_tnt then
+        handleEvent(event.pull())
+    else
+        print("lighting tnt")
+        light_tnt()
+        os.sleep(4)
+    end
 end
 

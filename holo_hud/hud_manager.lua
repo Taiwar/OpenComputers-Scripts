@@ -2,11 +2,14 @@ local comp = require "component"
 local event = require "event"
 local serialization = require "serialization"
 local computer = require "computer"
+local term = require "term"
 
 local g = comp.glasses
 local m = comp.modem
 
 g.removeAll()
+local last_cmd = ""
+local last_msg = ""
 
 local tab_functions = {
     [1] = function() switchTo("home_hud.lua") end,
@@ -34,16 +37,17 @@ function cleanExit()
 end
 
 function executeFunction(_, _, _, port, _, packet)
-    print("got msg")
-    print(port, packet)
+    term.clear()
+    last_msg = "{"..port..": "..packet.."}"
     local msg = serialization.unserialize(packet)
-    print("userialization finished")
     if port == 8001 and msg[1] ~= nil then
-        print("executing function: "..msg[1])
         tab_functions[msg[1]]()
-    else
-        print("failed check")
+        last_cmd = "execute function: "..msg[1]
     end
+    print("Last msg:")
+    print(last_msg)
+    print("Last cmd:")
+    print(last_cmd)
 end
 
 print("startup")
@@ -51,3 +55,4 @@ m.open(8000)
 m.open(8001)
 m.open(8002)
 event.listen("modem_message", executeFunction)
+event.listen("interrupted", cleanExit)

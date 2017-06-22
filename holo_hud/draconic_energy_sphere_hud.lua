@@ -16,8 +16,8 @@ local primary_color_dark = {primary_color[1] - 0.2, primary_color[2] - 0.2, prim
 
 local c_energy = 0
 local energy_box = 0
-local capacity_end_box = 0
-local capacity_start_box = 0
+local capacity_end_box
+local capacity_start_box
 
 function roundTo(nmbr, digits)
     local shift = 10 ^ digits
@@ -29,11 +29,11 @@ function initPowerDisplay(y)
     capacity_end_box = g.addRect()
     capacity_start_box = g.addRect()
 
-    capacity_start_box.setSize(10.8, 0.8)
+    capacity_start_box.setSize(0.8, 10.8)
     capacity_start_box.setPosition(base_x - 0.8, y-0.4)
     capacity_start_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
 
-    capacity_end_box.setSize(10.8, 0.8)
+    capacity_end_box.setSize(0.8, 10.8)
     capacity_end_box.setPosition(base_x + base_width - 10, y-0.4)
     capacity_end_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
 
@@ -45,7 +45,7 @@ function updatePowerDisplay(energy, capacity, y)
     local energy_ratio = energy/capacity
     local energy_width = energy_ratio*100*((base_width - 10)/100)
 
-    energy_box.setSize(10, energy_width)
+    energy_box.setSize(energy_width, 10)
     energy_box.setPosition(base_x, y)
 end
 
