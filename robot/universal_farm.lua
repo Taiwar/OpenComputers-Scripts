@@ -21,6 +21,7 @@ Robot also broadcasts start and finish of a farming operation.
 Planned:
 More wireless intercativity (e.g. Start/Stop command).
 More error handling (e.g. Player blocking path).
+
 --]===]
 local robot = require("robot")
 local sides = require("sides")
@@ -117,7 +118,7 @@ end
 
 print("<< [Universal Farm] >>")
 print("Starting up...")
-if robot.count(16) == 0 do
+if robot.count(16) == 0 then
     print("Please insert a container into slot 16")
     os.exit()
 end
