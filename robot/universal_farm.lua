@@ -48,8 +48,14 @@ function farmLoop()
     farmStrip()
     -- Keep farming strips until hitting the container
     isNotPassable, state = robot.detect()
+<<<<<<< HEAD
     while not checkForContainer() do
         -- Turn & move the right way at the end of a strip
+=======
+    while state == "air" do
+    -- for i = 0, rows do
+        print("Continuing farming")
+>>>>>>> 1fb78279fe2b6195bcf5cb9bf06cdcff7f2f3ee0
         if math.fmod(rows, 2) == 0 then
             robot.turnRight()
             robot.forward()
@@ -83,7 +89,10 @@ end
 
 -- Drop all crops into container belok and return to starting position
 function dropAndReturn()
+<<<<<<< HEAD
     itemcount = 0
+=======
+>>>>>>> 1fb78279fe2b6195bcf5cb9bf06cdcff7f2f3ee0
     for i = 1, 4 do
         robot.select(i)
         robot.dropDown()
@@ -94,6 +103,7 @@ function dropAndReturn()
     end
     robot.turnRight()
     robot.down()
+<<<<<<< HEAD
     m.broadcast(80, "farming_finished " .. tostring(itemcount))
 end
 
@@ -120,4 +130,17 @@ while true do
     manageEnergy()
     print("Finished")
     os.sleep(sleepInterval)
+=======
+end
+
+print("Universal Farm")
+-- print("Enter number of rows:")
+-- rows = tonumber(io.read()) - 1
+while true do
+    farmLoop()
+    if (computer.energy()/computer.maxEnergy()) < 0.8 do
+        print("Dummy charging function")
+    end
+    os.sleep(60)
+>>>>>>> 1fb78279fe2b6195bcf5cb9bf06cdcff7f2f3ee0
 end
