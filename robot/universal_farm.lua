@@ -18,7 +18,6 @@ function farmLoop()
     robot.forward()
     farmStrip()
     isNotPassable, state = robot.detect()
-    print(state)
     while state == "air" do
     -- for i = 0, rows do
         print("Continuing farming")
@@ -54,8 +53,8 @@ function farmStrip()
 end
 
 function dropAndReturn()
-    for i = 0, 4 do
-        robot.select(i + 1)
+    for i = 1, 4 do
+        robot.select(i)
         robot.dropDown()
     end
     robot.turnRight()
@@ -63,9 +62,16 @@ function dropAndReturn()
         robot.forward()
     end
     robot.turnRight()
+    robot.down()
 end
 
 print("Universal Farm")
 -- print("Enter number of rows:")
 -- rows = tonumber(io.read()) - 1
-farmLoop()
+while true do
+    farmLoop()
+    if (computer.energy()/computer.maxEnergy()) < 0.8 do
+        print("Dummy charging function")
+    end
+    os.sleep(60)
+end
