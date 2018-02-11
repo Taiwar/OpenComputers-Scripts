@@ -6,7 +6,7 @@ local component = require("component")
 local computer = require("computer")
 
 local m = component.modem
--- local rows = 0
+local rows = 0
 
 function farmLoop()
     print("Farming")
@@ -19,11 +19,10 @@ function farmLoop()
     farmStrip()
     isNotPassable, state = robot.detect()
     print(state)
-    iterator = 0
     while state == "air" do
     -- for i = 0, rows do
         print("Continuing farming")
-        if math.fmod(iterator, 2) == 0 then
+        if math.fmod(rows, 2) == 0 then
             robot.turnRight()
             robot.forward()
             robot.turnRight()
@@ -37,8 +36,9 @@ function farmLoop()
         farmStrip()
         isNotPassable, state = robot.detect()
         print(state)
-        iterator = iterator + 1
+        rows = rows + 1
     end
+    dropAndReturn()
 end
 
 function farmStrip()
@@ -51,6 +51,18 @@ function farmStrip()
         robot.forward()
         isNotPassable, state = robot.detectDown()
     end
+end
+
+function dropAndReturn()
+    for i = 0, 4 do
+        robot.select(i + 1)
+        robot.dropDown()
+    end
+    robot.turnRight()
+    for i = 1, rows do 
+        robot.forward()
+    end
+    robot.turnRight()
 end
 
 print("Universal Farm")
