@@ -1,11 +1,12 @@
 local robot = require("robot")
 local sides = require("sides")
 local event = require("event")
+local math = require("math")
 local component = require("component")
 local computer = require("computer")
 
 local m = component.modem
-local rows = 0
+-- local rows = 0
 
 function farmLoop()
     print("Farming")
@@ -18,9 +19,11 @@ function farmLoop()
     farmStrip()
     isNotPassable, state = robot.detect()
     print(state)
-    for i = 0, rows do
+    iterator = 0
+    while state == "air" do
+    -- for i = 0, rows do
         print("Continuing farming")
-        if math.fmod(rows, 2) do
+        if math.fmod(iterator, 2) == 0 then
             robot.turnRight()
             robot.forward()
             robot.turnRight()
@@ -34,6 +37,7 @@ function farmLoop()
         farmStrip()
         isNotPassable, state = robot.detect()
         print(state)
+        iterator = iterator + 1
     end
 end
 
@@ -50,6 +54,6 @@ function farmStrip()
 end
 
 print("Universal Farm")
-print("Enter number of rows:")
-rows = tonumber(io.read())
+-- print("Enter number of rows:")
+-- rows = tonumber(io.read()) - 1
 farmLoop()
