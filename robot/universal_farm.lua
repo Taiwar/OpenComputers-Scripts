@@ -20,7 +20,7 @@ Robot also broadcasts start and finish of a farming operation.
 
 Planned:
 More wireless intercativity (e.g. Start/Stop command).
-
+More error handling (e.g. Player blocking path).
 --]===]
 local robot = require("robot")
 local sides = require("sides")
@@ -86,6 +86,8 @@ function dropAndReturn()
     itemcount = 0
     for i = 1, 4 do
         robot.select(i)
+        slotcount = robot.count(i)
+        itemcount = itemcount + slotcount
         robot.dropDown()
     end
     robot.turnRight()
@@ -115,6 +117,10 @@ end
 
 print("<< [Universal Farm] >>")
 print("Starting up...")
+if robot.count(16) == 0 do
+    print("Please insert a container into slot 16")
+    os.exit()
+end
 while true do
     farmLoop()
     manageEnergy()
