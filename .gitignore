@@ -53,3 +53,9 @@ fabric.properties
 # modules.xml
 # .idea/misc.xml 
 # *.ipr
+.idea/compiler.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/OpenComputers-Scripts.iml
+.idea/serialmonitor_settings.xml
+.idea/copyright/profiles_settings.xml
