@@ -32,7 +32,7 @@ local computer = require("computer")
 
 local m = component.modem
 
--- Keeps track of how many rows the robot has moved. Used for returning to starting position .
+-- Keeps track of how many rows the robot has moved. Used for returning to starting position.
 local rows = 0
 -- How long the robot will wait between farming operations. Can be changed as needed.
 local sleepInterval = 60
@@ -45,7 +45,7 @@ function farmLoop()
     -- Move into position
     robot.up()
     robot.forward()
-    -- farm first strip
+    -- Farm first strip
     farmStrip()
     -- Keep farming strips until hitting the container
     isNotPassable, state = robot.detect()
