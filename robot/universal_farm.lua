@@ -75,8 +75,7 @@ function farmStrip()
     while state == "passable" do
         robot.swingDown()
         robot.suckDown()
-        robot.select(1)
-        robot.placeDown()
+        replantCrop()
         robot.forward()
         isNotPassable, state = robot.detectDown()
     end
@@ -98,6 +97,23 @@ function dropAndReturn()
     robot.turnRight()
     robot.down()
     m.broadcast(80, "farming_finished " .. tostring(itemcount))
+end
+
+function replantCrop()
+    slot = 1
+    robot.select(slot)
+    robot.placeDown()
+    isNotPassable, state = robot.detectDown()
+    while state == "air" do
+        slot = slot + 1
+        if slot > 16 then
+            print("Error: Failed to plant seeds")
+            os.exit()
+        end
+        robot.select(slot)
+        robot.placeDown()
+        isNotPassable, state = robot.detectDown()
+    end
 end
 
 -- Check if container in slot 16 matches the block below
