@@ -32,14 +32,15 @@ local computer = require("computer")
 
 local m = component.modem
 
--- Keeps track of how many rows the robot has moved. Used for returning to starting position.
-local rows = 0
+
 -- How long the robot will wait between farming operations. Can be changed as needed.
 local sleepInterval = 60
 
 -- Main farm loop
 function farmLoop()
     print("Farming")
+    -- Keeps track of how many rows the robot has moved. Used for returning to starting position.
+    rows = 0
     m.broadcast(80, "farming_started")
     robot.select(1)
     -- Move into position
@@ -66,7 +67,7 @@ function farmLoop()
         isNotPassable, state = robot.detect()
         rows = rows + 1
     end
-    dropAndReturn()
+    dropAndReturn(rows)
 end
 
 -- While above crops (aka "passable"), harvest, replant and move forward
@@ -84,7 +85,7 @@ function farmStrip()
 end
 
 -- Drop all crops into container below and return to starting position
-function dropAndReturn()
+function dropAndReturn(distance)
     itemcount = 0
     for i = 1, 4 do
         robot.select(i)
@@ -93,7 +94,7 @@ function dropAndReturn()
         robot.dropDown()
     end
     robot.turnRight()
-    for i = 1, rows do 
+    for i = 1, distance do 
         robot.forward()
     end
     robot.turnRight()
