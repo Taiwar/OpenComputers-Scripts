@@ -76,7 +76,9 @@ function farmStrip()
         robot.swingDown()
         robot.suckDown()
         replantCrop()
-        robot.forward()
+        if not robot.forward() then
+            break
+        end
         isNotPassable, state = robot.detectDown()
     end
 end
@@ -99,6 +101,7 @@ function dropAndReturn()
     m.broadcast(80, "farming_finished " .. tostring(itemcount))
 end
 
+-- Handles crops with multiple drops by looping through slots until one item successfully plants something
 function replantCrop()
     slot = 1
     robot.select(slot)
