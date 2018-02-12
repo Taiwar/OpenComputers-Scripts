@@ -8,15 +8,12 @@ local m = component.modem
 local gpu = component.gpu
 
 local msg = {}
-local hub_adress = "c4f7e17c-a067-472d-af84-f86bd5c625da"
+local hub_adress = "db36e32b-fc33-462a-91f5-08689ed62120"
 
 function API.fillTable()
     API.setTable("Home", cmd_showHome, nil, 5,15,3,5)
     API.setTable("Energy", cmd_showEnergy, nil, 17,27,3,5)
-    API.setTable("Sensors", cmd_showSensors, nil, 29,39,3,5)
-    API.setTable("Time", cmd_toggleTime, nil, 41,51,3,5)
-    API.setTable("Clear", cmd_clearHUD, nil, 53,63,3,5)
-    API.setTable("DroneLoop", cmd_toggleDroneLoop, nil, 65,75,3,5)
+    API.setTable("Clear", cmd_clearHUD, nil, 29,39,3,5)
     API.setTable("Exit", cmd_exitHUD, nil, 5,15,7,9)
     API.screen()
 end
@@ -32,67 +29,28 @@ function getClick()
     end
 end
 
-
 function cmd_showHome()
     API.flash("Home",0.05)
-    msg[1] = 1
+    msg["command"] = "home"
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end
 
 function cmd_showEnergy()
     API.flash("Energy",0.05)
-    msg[1] = 2
+    msg["command"] = "energy"
     m.send(hub_adress, 8001, serialization.serialize(msg))
-end
-
-function cmd_showSensors()
-    API.flash("Sensors",0.05)
-    msg[1] = 3
-    m.send(hub_adress, 8001, serialization.serialize(msg))
-end
-
-function cmd_toggleTime()
-    API.toggleButton("Time")
-    if buttonStatus == false then
-        msg[1] = ""
-        m.send(hub_adress, 8002, serialization.serialize(msg))
-    else
-        msg[1] = 4
-        m.send(hub_adress, 8001, serialization.serialize(msg))
-    end
 end
 
 function cmd_clearHUD()
     API.flash("Clear",0.05)
-    msg[1] = 5
+    msg["command"] = "clear"
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end
 
 function cmd_exitHUD()
-    msg[1] = 6
+    msg["command"] = "exit"
     m.send(hub_adress, 8001, serialization.serialize(msg))
-end
-
-function cmd_toggleDroneLoop()
-    API.toggleButton("DroneLoop")
-    if buttonStatus == false then
-        msg = false
-        m.broadcast(8003, msg)
-    else
-        msg = true
-        m.broadcast(8003, msg)
-    end
-end
-
-function cmd_loadBase()
-    API.toggleButton("LoadBase")
-    if buttonStatus == false then
-        msg = 0
-        m.broadcast(8006, msg)
-    else
-        msg = 15
-        m.broadcast(8006, msg)
-    end
+    os.exit()
 end
 
 term.setCursorBlink(false)
@@ -104,7 +62,3 @@ API.heading("Glasses Control")
 while true do
     getClick()
 end
-
-
-
---eof

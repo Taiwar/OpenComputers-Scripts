@@ -4,7 +4,7 @@ local m = component.modem
 local ecell = component.proxy(component.list("energy_device")())
 local msg_data = {}
 
-local hub_adress = "654d6db4-a286-44f7-8556-c42c60875c11"
+local hub_adress = "db36e32b-fc33-462a-91f5-08689ed62120"
 
 while true do
     msg_data["current"] = ecell.getEnergyStored()

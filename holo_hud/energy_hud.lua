@@ -11,8 +11,8 @@ local base_y = 40
 local base_x = 10
 local base_width = 125
 local base_text_scale = 0.8
-local primary_color = {0.72, 0.44, 1}
-local primary_color_dark = {primary_color[1] - 0.25, primary_color[2] - 0.25, primary_color[3] - 0.25}
+local primary_color = {1, 0.22, 0.22}
+local primary_color_dark = {primary_color[1] - 0.35, primary_color[2] - 0.35, primary_color[3] - 0.35}
 
 local c_energy = 0
 local energy_box = 0
@@ -51,15 +51,15 @@ end
 
 local box = ghelper.bgBox(base_x - 4, base_y - 10, base_width, 45, primary_color_dark, primary_color)
 box.setHeadline("Energy", base_text_scale, primary_color)
-local power_info = box.addText("", 1, 10, base_text_scale, primary_color)
-local net_energy_info = box.addText("", 1, 20, base_text_scale, primary_color)
+local power_info = box.addText("", 1, 10, base_text_scale, {1, 1, 1})
+local net_energy_info = box.addText("", 1, 20, base_text_scale, {1, 1, 1})
 initPowerDisplay(base_y + 20)
 power_info.setText("Waiting for signal")
 
 function calculateNetEnergy(curr_energy)
     local energy_dif = curr_energy - c_energy
 
-    net_energy_info.setText("Net-Energy in kRF/t: "..roundTo((energy_dif/1000)/20, 2))
+    net_energy_info.setText("Net-Energy in RF/t: "..roundTo((energy_dif)/20, 2))
     if energy_dif < 0 then
         net_energy_info.setColor(1, 0, 0)
     elseif energy_dif == 0 then
@@ -83,9 +83,9 @@ while true do
     local msg = serialization.unserialize(message)
 
     if port == 8000 then
-        power_info.setText("Energy stored in GRF: "..roundTo(msg[1]/1000000000, 2))
-        calculateNetEnergy(msg[1])
-        updatePowerDisplay(msg[1], msg[2], base_y + 20)
+        power_info.setText("Energy stored in MRF: "..roundTo(msg["current"]/1000000, 2))
+        calculateNetEnergy(msg["current"])
+        updatePowerDisplay(msg["current"], msg["max"], base_y + 20)
     end
 end
 

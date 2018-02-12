@@ -22,6 +22,7 @@ end
 function checkCallback(_, _, _, port, _, _)
     if port == 8002 then
         doTimeLoop = false
+        os.exit()
     end
 end
 
