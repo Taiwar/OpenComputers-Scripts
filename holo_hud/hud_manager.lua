@@ -14,6 +14,7 @@ local last_msg = ""
 local tab_functions = {
     ["home"] = function() switchTo("home_hud.lua") end,
     ["energy"] = function() switchTo("energy_hud.lua") end,
+    ["farming"] = function() switchTo("farming_hud.lua") end,
     ["clear"] = function() g.removeAll() end,
     -- ["timeOn"] = function() os.execute("time_widget.lua") end,
     -- ["sensor"] = function() switchTo("entity_sensor_hud.lua") end,
@@ -29,9 +30,9 @@ function cleanExit()
     computer.pushSignal("closeWidget")
     g.removeAll()
     event.ignore("modem_message")
+    m.close(80)
     m.close(8000)
     m.close(8001)
-    m.close(8002)
     os.exit()
 end
 
@@ -50,8 +51,8 @@ function executeFunction(_, _, _, port, _, packet)
 end
 
 print("startup")
+m.open(80)
 m.open(8000)
 m.open(8001)
-m.open(8002)
 event.listen("modem_message", executeFunction)
 event.listen("interrupted", cleanExit)

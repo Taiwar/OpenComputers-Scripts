@@ -13,8 +13,9 @@ local hub_adress = "db36e32b-fc33-462a-91f5-08689ed62120"
 function API.fillTable()
     API.setTable("Home", cmd_showHome, nil, 5,15,3,5)
     API.setTable("Energy", cmd_showEnergy, nil, 17,27,3,5)
-    API.setTable("Clear", cmd_clearHUD, nil, 29,39,3,5)
-    API.setTable("Exit", cmd_exitHUD, nil, 5,15,7,9)
+    API.setTable("Farms", cmd_showFarms, nil, 29,39,3,5)
+    API.setTable("Clear", cmd_clearHUD, nil, 5,15,7,9)
+    API.setTable("Exit", cmd_exitHUD, nil, 17,27,7,9)
     API.screen()
 end
 
@@ -38,6 +39,12 @@ end
 function cmd_showEnergy()
     API.flash("Energy",0.05)
     msg["command"] = "energy"
+    m.send(hub_adress, 8001, serialization.serialize(msg))
+end
+
+function cmd_showFarms()
+    API.flash("Farms",0.05)
+    msg["command"] = "farms"
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end
 
