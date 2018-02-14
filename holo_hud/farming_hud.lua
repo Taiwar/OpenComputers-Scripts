@@ -18,7 +18,7 @@ event.listen("closeWidget", cleanExit)
 
 g.removeAll()
 
-local base_y = 40
+local base_y = 20
 local base_x = 10
 local base_width = 125
 local base_text_scale = 0.8
