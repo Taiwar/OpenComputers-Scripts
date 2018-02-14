@@ -29,19 +29,22 @@ local event = require("event")
 local math = require("math")
 local component = require("component")
 local computer = require("computer")
+local serialization = require("serialization")
 
 local m = component.modem
 
 
 -- How long the robot will wait between farming operations. Can be changed as needed.
 local sleepInterval = 120
+local msg_data = {}
 
 -- Main farm loop
 function farmLoop()
     print("Farming")
     -- Keeps track of how many rows the robot has moved. Used for returning to starting position.
     rows = 0
-    m.broadcast(80, "farming_started")
+    msg_data["status"] = "started"
+    m.broadcast(80, serialization.serialize(msg_data))
     robot.select(1)
     -- Move into position
     robot.up()
@@ -120,11 +123,11 @@ end
 
 -- Drop all crops into container below and return to starting position
 function dropAndReturn(distance)
-    itemcount = 0
+    cropsHarvested = 0
     for i = 1, 8 do
         robot.select(i)
         slotcount = robot.count(i)
-        itemcount = itemcount + slotcount
+        cropsHarvested = cropsHarvested + slotcount
         robot.dropDown()
     end
     robot.turnRight()
@@ -133,7 +136,9 @@ function dropAndReturn(distance)
     end
     robot.turnRight()
     robot.down()
-    m.broadcast(80, "farming_finished " .. tostring(itemcount))
+    msg_data["status"] = "finished"
+    msg_data["harvested"] = cropsHarvested
+    m.broadcast(80, serialization.serialize(msg_data))
 end
 
 -- Handles crops with multiple drops by looping through slots until one item successfully plants something
