@@ -44,7 +44,7 @@ end
 
 function cmd_showFarms()
     API.flash("Farms",0.05)
-    msg["command"] = "farms"
+    msg["command"] = "farming"
     m.send(hub_adress, 8001, serialization.serialize(msg))
 end
 
