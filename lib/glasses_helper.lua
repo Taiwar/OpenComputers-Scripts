@@ -77,14 +77,23 @@ function ghelper.bgBox(x, y, w, h, primary_color, secondary_color)
         button.setColor(color[1], color[2] , color[3])
 
         local label = g.addTextLabel()
-        local xspot = math.floor((x + x+w + bg_group["root"][1] - string.len(text)) /2) + 1
-        local yspot = math.floor((bg_group["root"][2] + y + (h/2))) + (2/scale)
+        --local xspot = math.floor((bg_group["root"][1] + x + w/2) - (string.len(text)/2))
+        local xspot = (bg_group["root"][1] + x + (w/2) - (string.len(text)/scale))/scale
+        local yspot = bg_group["root"][2] + y + (h/2)
         label.setPosition(xspot, yspot)
         label.setColor(0.1, 0.1, 0.1)
         label.setScale(scale)
         label.setText(text)
 
         return button
+    end
+
+    function bg_group.addCornerButton(text, scale, color)
+        w = 7
+        h = 7
+        x = bg_group["w"] - w + 2
+        y = -2
+        return bg_group.addButton(text, w, h, x, y, scale, color)
     end
 
     return bg_group
