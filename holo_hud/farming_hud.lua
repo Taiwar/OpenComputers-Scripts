@@ -11,7 +11,14 @@ local loopsCompleted = 0
 
 function cleanExit(_, _)
     event.ignore("closeWidget")
+    event.ignore("interact_overlay")
     os.exit()
+end
+
+function requestSwitch(name)
+    print("Requesting switchTo "..name)
+    event.push("requestSwitch", name)
+    cleanExit()
 end
 
 event.listen("closeWidget", cleanExit)
@@ -28,6 +35,8 @@ local farming_box = 0
 
 local box = ghelper.bgBox(base_x - 4, base_y - 10, base_width, 45, primary_color_dark, primary_color)
 box.setHeadline("Farms", base_text_scale, primary_color)
+local exitButton = box.addCornerButton("X", base_text_scale, primary_color)
+ghelper.registerButton("Exit", exitButton, requestSwitch, "home")
 local totalFarmedText = box.addText("", 1, 10, base_text_scale, {1, 1, 1})
 local robotsRunningText = box.addText("", 1, 20, base_text_scale, {1, 1, 1})
 local loopsCompletedText = box.addText("", 1, 30, base_text_scale, {1, 1, 1})

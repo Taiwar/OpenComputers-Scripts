@@ -49,8 +49,22 @@ function updatePowerDisplay(energy, capacity, y)
     energy_box.setPosition(base_x, y)
 end
 
+function cleanExit(_, _)
+    event.ignore("closeWidget")
+    event.ignore("interact_overlay")
+    os.exit()
+end
+
+function requestSwitch(name)
+    print("Requesting switchTo "..name)
+    event.push("requestSwitch", name)
+    cleanExit()
+end
+
 local box = ghelper.bgBox(base_x - 4, base_y - 10, base_width, 45, primary_color_dark, primary_color)
 box.setHeadline("Energy", base_text_scale, primary_color)
+local exitButton = box.addCornerButton("X", base_text_scale, primary_color)
+ghelper.registerButton("Exit", exitButton, requestSwitch, "home")
 local power_info = box.addText("", 1, 10, base_text_scale, {1, 1, 1})
 local net_energy_info = box.addText("", 1, 20, base_text_scale, {1, 1, 1})
 initPowerDisplay(base_y + 20)
@@ -71,12 +85,8 @@ function calculateNetEnergy(curr_energy)
     c_energy = curr_energy
 end
 
-function cleanExit(_, _)
-    event.ignore("closeWidget")
-    os.exit()
-end
-
 event.listen("closeWidget", cleanExit)
+event.listen("interact_overlay", ghelper.handleClick)
 
 while true do
     local _, _, _, port, _, message = event.pull("modem_message")
