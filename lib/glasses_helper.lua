@@ -77,7 +77,6 @@ function ghelper.bgBox(x, y, w, h, primary_color, secondary_color)
         button.setColor(color[1], color[2] , color[3])
 
         local label = g.addTextLabel()
-        --local xspot = math.floor((bg_group["root"][1] + x + w/2) - (string.len(text)/2))
         local xspot = (bg_group["root"][1] + x + (w/2) - (string.len(text)/scale))/scale
         local yspot = bg_group["root"][2] + y + (h/2)
         label.setPosition(xspot, yspot)
