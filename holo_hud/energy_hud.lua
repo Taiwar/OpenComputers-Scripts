@@ -16,6 +16,7 @@ local primary_color_dark = {primary_color[1] - 0.35, primary_color[2] - 0.35, pr
 
 local c_energy = 0
 local energy_box = 0
+local energy_box_translation = 0
 local capacity_end_box
 local capacity_start_box
 
@@ -25,20 +26,20 @@ function roundTo(nmbr, digits)
 end
 
 function initPowerDisplay(y)
-    energy_box = g.addRect()
-    capacity_end_box = g.addRect()
-    capacity_start_box = g.addRect()
+    energy_box = g.addBox2D()
+    capacity_end_box = g.addBox2D()
+    capacity_start_box = g.addBox2D()
 
     capacity_start_box.setSize(0.8, 10.8)
-    capacity_start_box.setPosition(base_x - 0.8, y-0.4)
-    capacity_start_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
+    capacity_start_box.addTranslation(base_x - 0.8, y-0.4, 0)
+    capacity_start_box.addColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3], 1)
 
     capacity_end_box.setSize(0.8, 10.8)
-    capacity_end_box.setPosition(base_x + base_width - 10, y-0.4)
-    capacity_end_box.setColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3])
+    capacity_end_box.addTranslation(base_x + base_width - 10, y-0.4, 0)
+    capacity_end_box.addColor(primary_color_dark[1], primary_color_dark[2] , primary_color_dark[3], 1)
 
-    energy_box.setColor(primary_color[1], primary_color[2] , primary_color[3])
-    energy_box.setAlpha(0.9)
+    energy_box.addColor(primary_color[1], primary_color[2] , primary_color[3], 0.9)
+    energy_box_translation = energy_box.addTranslation(0, 0, 0)
 end
 
 function updatePowerDisplay(energy, capacity, y)
@@ -46,7 +47,7 @@ function updatePowerDisplay(energy, capacity, y)
     local energy_width = energy_ratio*100*((base_width - 10)/100)
 
     energy_box.setSize(energy_width, 10)
-    energy_box.setPosition(base_x, y)
+    energy_box.modifiers[energy_box_translation](base_x, y, 0)
 end
 
 function cleanExit(_, _)
@@ -75,11 +76,11 @@ function calculateNetEnergy(curr_energy)
 
     net_energy_info.setText("Net-Energy in RF/t: "..roundTo((energy_dif)/20, 2))
     if energy_dif < 0 then
-        net_energy_info.setColor(1, 0, 0)
+        net_energy_info.addColor(1, 0, 0, 1)
     elseif energy_dif == 0 then
-        net_energy_info.setColor(1, 1, 1)
+        net_energy_info.addColor(1, 1, 1, 1)
     else
-        net_energy_info.setColor(0, 1, 0)
+        net_energy_info.addColor(0, 1, 0, 1)
     end
 
     c_energy = curr_energy
