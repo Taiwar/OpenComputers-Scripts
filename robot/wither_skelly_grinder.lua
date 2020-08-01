@@ -61,8 +61,9 @@ while true do
     else
         print("spawning more skellies")
         currentRsStrength = rs.setOutput(out_side, 15)
+        os.sleep(4)
     end
 
     -- sleep cycle
-    os.sleep(1.5)
+    os.sleep(1)
 end
