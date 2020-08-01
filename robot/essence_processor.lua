@@ -43,18 +43,26 @@ local recipes = {
         1, 1, 1,
         0, 0, 0,
         0, 0, 0
+    },
+    cross = {
+        0, 1, 0,
+        1, 1, 1,
+        0, 1, 0
     }
 }
 
 local MYSTICAL_AGRICULTURE = "mysticalagriculture:"
 local MYSTICAL_AGRADDITIONS = "mysticalagradditions:"
+local ESSENCE = "_essence"
 
 -- Set up mappings of essence-name to recipe-layout
 local mappings = {}
-mappings[MYSTICAL_AGRICULTURE.."nether_quartz_essence"] = recipes["dumbbell"]
-mappings[MYSTICAL_AGRICULTURE.."redstone_essence"] = recipes["full"]
-mappings[MYSTICAL_AGRICULTURE.."silicon_essence"] = recipes["line"]
-mappings[MYSTICAL_AGRICULTURE.."rubber_essence"] = recipes["line"]
+mappings[MYSTICAL_AGRICULTURE.."nether_quartz"..ESSENCE] = recipes["dumbbell"]
+mappings[MYSTICAL_AGRICULTURE.."redstone"..ESSENCE] = recipes["full"]
+mappings[MYSTICAL_AGRICULTURE.."silicon"..ESSENCE] = recipes["line"]
+mappings[MYSTICAL_AGRICULTURE.."rubber"..ESSENCE] = recipes["line"]
+mappings[MYSTICAL_AGRICULTURE.."blizz"..ESSENCE] = recipes["cross"]
+mappings[MYSTICAL_AGRICULTURE.."basalz"..ESSENCE] = recipes["cross"]
 
 function sumTable(t)
     local sum = 0

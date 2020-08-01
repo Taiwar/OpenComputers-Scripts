@@ -42,7 +42,8 @@ local exclusions = {
     "fire",
     "nether",
     "experience",
-    "rabbit"
+    "rabbit",
+    "mystical flower"
 }
 
 function findEssences()
