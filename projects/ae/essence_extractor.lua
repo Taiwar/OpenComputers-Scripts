@@ -154,20 +154,26 @@ function main()
     for dbId, item in pairs(essences) do
         print("Crafting "..item["label"])
 
-        -- Request essence to be exportet into robot (Essence Processor)
-        requestEssence(dbId)
-        os.sleep(0.2) -- Give export bus some time
-        -- Tell robot to start crafting
-        sendMessage(msgStartCrafting)
-        -- Wait for robot response
-        local craftingFinished = false
-        while not craftingFinished do
-            -- Wait for message
-            local _, _, _, _, _, message = event.pull("modem_message")
-            -- Deserialize it
-            message = ser.unserialize(message)
-            -- If it's the correct type, stop looping
-            craftingFinished = message["type"] == "CraftingFinished"
+        -- Craft until there's <9 essence in the AE system left
+        local itemCount = item["size"]
+        while itemCount >= 9 do
+            -- Request essence to be exportet into robot (Essence Processor)
+            requestEssence(dbId)
+            os.sleep(0.2) -- Give export bus some time
+            -- Tell robot to start crafting
+            sendMessage(msgStartCrafting)
+            -- Wait for robot response
+            local craftingFinished = false
+            while not craftingFinished do
+                -- Wait for message
+                local _, _, _, _, _, message = event.pull("modem_message")
+                -- Deserialize it
+                message = ser.unserialize(message)
+                -- If it's the correct type, stop looping
+                craftingFinished = message["type"] == "CraftingFinished"
+            end
+            -- Refresh count
+            itemCount = aeSystem.getItemsInNetwork({name=item["name"]})[1]["size"]
         end
     end
 end
