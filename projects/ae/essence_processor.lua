@@ -91,6 +91,8 @@ mappings[MYSTICAL_AGRICULTURE.."silicon"..ESSENCE] = recipes["line"]
 mappings[MYSTICAL_AGRICULTURE.."rubber"..ESSENCE] = recipes["line"]
 mappings[MYSTICAL_AGRICULTURE.."blizz"..ESSENCE] = recipes["cross"]
 mappings[MYSTICAL_AGRICULTURE.."basalz"..ESSENCE] = recipes["cross"]
+mappings[MYSTICAL_AGRICULTURE.."blitz"..ESSENCE] = recipes["cross"]
+mappings[MYSTICAL_AGRICULTURE.."saltpeter"..ESSENCE] = recipes["line"]
 
 -- Helper function to create sum of elements in table
 -- Preconditions: t ~= nil and t only contains numbers
