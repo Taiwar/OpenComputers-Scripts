@@ -38,6 +38,7 @@ local m = comp.modem
 local EXPORT_BUS_DIRECTION = sides.down
 local INPUT_SLOT = 13
 local PORT = 1000
+local LOOP = true
 
 -- Structure of "CraftingStart" table
 local msgStartCrafting = {
@@ -178,4 +179,10 @@ function main()
     end
 end
 
-main()
+if LOOP then
+    while true do
+        main()
+    end
+else
+    main()
+end
