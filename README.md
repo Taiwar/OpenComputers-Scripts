@@ -14,7 +14,7 @@ Scripts are categorized in folders based on
 * The **entity** they're written for (`computer`, `drone`, `robot`...) 
 * Their associated **projects**, if they work in conjunction with one or more other scripts to achieve a task
   (`ae`, `holo_hud`, `security`...)
-* Whether they are considered libraries (`lib`)
+* Whether they are considered **libraries** (`lib`)
   
 ## Running the scripts
 Scripts are in different stages of being developed, but newer ones will have their requirements in a comment-header-block
