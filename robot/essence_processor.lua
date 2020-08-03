@@ -1,7 +1,31 @@
+--[===[
+<< Essence Processor >>
+A script to automate crafting Mystical Agriculture essence into its products.
+Works together with the Essence Extractor to pull essence from an AE system and push the products back into it.
+NOTE: This is probably also a baseline for a generic robot-autocrafter with potentially dynamic recipes and mappings
+
+Requirements (not minimum, just what it was tested on):
+- Tier 2 Robot
+- OpenOS (+ Screen, Keyboard & HDD)
+- Inventory Upgrade
+- Inventory Controller Upgrade
+- Wireless Network Card
+- Database Upgrade (needs to hold all different types of essence you want to process
+- Crafting Upgrade
+
+Functionality:
+- Waits for message from exractor that it has sent the essence
+- Aligns input essence into crafting grid (top left 3x3 in robot inventory) according to recipe mappings (default is circle)
+- Crafts until output slot is full
+- Drops items in output slot out the front of the robot (should be an interface or a different inventory that the products should be stored in)
+- Continues until input slot is empty/doesn't contain enough essence for recipe
+- Sends message to extractor that robot is done crafting
+- (repeat)
+--]===]
+
 local robot = require "robot"
 local computer = require "computer"
 local comp = require "component"
-local sides = require "sides"
 local event = require "event"
 local ser = require "serialization"
 local c = comp.crafting
@@ -10,6 +34,7 @@ local m = comp.modem
 
 local currentState
 
+-- Constants for operation
 local OUTPUT_SLOT = 16
 local INPUT_SLOT = 13
 local PORT = 1000
@@ -51,6 +76,7 @@ local recipes = {
     }
 }
 
+-- String constants to make writing mappings easier and less error-prone
 local MYSTICAL_AGRICULTURE = "mysticalagriculture:"
 local MYSTICAL_AGRADDITIONS = "mysticalagradditions:"
 local ESSENCE = "_essence"
@@ -64,6 +90,9 @@ mappings[MYSTICAL_AGRICULTURE.."rubber"..ESSENCE] = recipes["line"]
 mappings[MYSTICAL_AGRICULTURE.."blizz"..ESSENCE] = recipes["cross"]
 mappings[MYSTICAL_AGRICULTURE.."basalz"..ESSENCE] = recipes["cross"]
 
+-- Helper function to create sum of elements in table
+-- Preconditions: t ~= nil and t only contains numbers
+-- Returns: Sum of elements in table
 function sumTable(t)
     local sum = 0
     for _, v in pairs(t) do
@@ -72,33 +101,35 @@ function sumTable(t)
     return sum
 end
 
+-- Aligns essence into crafting grid
+-- Returns: True if recipe could be formed at least once, otherwise false
 function alignEssence()
-    print("alignEssence")
     local couldAlign = false
 
     local essence = ic.getStackInInternalSlot(INPUT_SLOT)
     robot.select(INPUT_SLOT)
 
-    local recipe = recipes["default"]
-
+    -- Only process further if there is essence in the input slot
     if essence ~= nil then
+        -- If no matching mapping can be found, use default recipe
+        local recipe = recipes["default"]
+
+        -- Check if there's an entry in mappings with this essence's name
         if mappings[essence["name"]] ~= nil then
+            -- Set recipe to the one in the matching mapping
             recipe = mappings[essence["name"]]
         end
 
+        -- Calculate amount of essence per position in recipe
         local amountPerPosition = 0
-
-        print("Needed for one recipe: "..sumTable(recipe))
-        print("In input slot: "..robot.count())
+        -- Avoid division by 0
         if sumTable(recipe) ~= 0 then
-            print("Calculation amountPerPosition")
+            -- Amount per position is maximum (total / positions) rounded down
             amountPerPosition = math.floor(robot.count() / sumTable(recipe))
         end
 
-        print("aPP: ".. amountPerPosition)
         -- Only align items if pattern can be filled at least once
         if amountPerPosition >= 1 then
-            print("Can align at least once. Aligning...")
             for position, amount in pairs(recipe) do
                 if amount > 0 then
                     -- This mapping from position to inventory slot is not pretty, but it works
@@ -109,73 +140,76 @@ function alignEssence()
                             slot = slot + 1
                         end
                     end
-                    print("transfering stack")
+                    -- Transfer calculated amount to slot in "crafting table"
                     robot.transferTo(slot, amountPerPosition)
                 end
             end
             couldAlign = true
         end
-    else
-        couldAlign = false
     end
-    os.sleep(0.5) -- buffer
     return couldAlign
 end
 
+-- Craft essences in input slot until no longer possible
 function craftEssence()
-    print("craftEssence")
     -- Only craft if essence could be aligned
     if alignEssence() then
         repeat
-            print("Could align")
             local couldCraft = true
             -- Keep crafting and exporting while it works
             while couldCraft do
-                print("could craft")
                 robot.select(OUTPUT_SLOT)
                 -- always try to craft a bit less than a stack, so there's no overflow
-                couldCraft = c.craft(48)
+                couldCraft = c.craft(48) -- returns true if it was able to craft at least one result
                 -- if something is in outputSlot, export it
                 if robot.count() > 0 then
                     outputResult()
                 end
             end
         until not alignEssence() -- repeat until input is not enough to fill pattern anymore
-    else
-        print("Could not craft anything: Too little essence")
     end
     cleanInv()
 end
 
+-- Cleans robot's inventory
+-- Precondition: Only input slot may contain something after craftEssence is done
+-- (assumption is made to save time and should be true with how the other functions are written)
 function cleanInv()
     robot.select(INPUT_SLOT)
+    -- Drop out the front because in the example setup this is an interface and therefore passed back into the system for potential future use
     robot.drop()
 end
 
+-- Output results in output slot
 function outputResult()
-    print("outputResult")
+    robot.select(OUTPUT_SLOT)
+    -- Drop out the front because in the example setup this is an interface
     robot.drop()
 end
 
+-- Helper function to serialize and send a table over the network
 function sendMessage(message)
-    print("sendMessage: "..message["type"])
     m.broadcast(PORT, ser.serialize(message))
 end
 
+-- Main program function
 function main()
-    craftEssence()
-    os.sleep(0.5) -- buffer
-    sendMessage(msgFinishedCrafting)
-end
+    -- Open modem port to receive/send messages
+    m.open(PORT)
 
-m.open(PORT)
+    -- Main program loop
+    while true do
+        -- Wait for message
+        local _, _, _, _, _, message = event.pull("modem_message")
+        -- Deserialize it
+        message = ser.unserialize(message)
 
-while true do
-    local _, _, _, _, _, message = event.pull("modem_message")
-    message = ser.unserialize(message)
-    if message["type"] == "CraftingStart" then
-        main()
+        -- If it's the correct type, start crafting and send reply when done
+        if message["type"] == "CraftingStart" then
+            craftEssence()
+            sendMessage(msgFinishedCrafting)
+        end
     end
 end
 
--- main()
+main()
