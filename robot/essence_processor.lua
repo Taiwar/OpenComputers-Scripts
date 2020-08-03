@@ -10,7 +10,6 @@ Requirements (not minimum, just what it was tested on):
 - Inventory Upgrade
 - Inventory Controller Upgrade
 - Wireless Network Card
-- Database Upgrade (needs to hold all different types of essence you want to process
 - Crafting Upgrade
 
 Functionality:
