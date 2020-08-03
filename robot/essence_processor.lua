@@ -2,7 +2,9 @@
 << Essence Processor >>
 A script to automate crafting Mystical Agriculture essence into its products.
 Works together with the Essence Extractor to pull essence from an AE system and push the products back into it.
-NOTE: This is probably also a baseline for a generic robot-autocrafter with potentially dynamic recipes and mappings
+
+Note
+This is probably also a baseline for a generic robot-autocrafter with potentially dynamic recipes and mappings
 
 Requirements (not minimum, just what it was tested on):
 - Tier 2 Robot
@@ -13,7 +15,7 @@ Requirements (not minimum, just what it was tested on):
 - Crafting Upgrade
 
 Functionality:
-- Waits for message from exractor that it has sent the essence
+- Waits for message from extractor that it has sent the essence
 - Aligns input essence into crafting grid (top left 3x3 in robot inventory) according to recipe mappings (default is circle)
 - Crafts until output slot is full
 - Drops items in output slot out the front of the robot (should be an interface or a different inventory that the products should be stored in)
@@ -38,6 +40,7 @@ local OUTPUT_SLOT = 16
 local INPUT_SLOT = 13
 local PORT = 1000
 
+-- Structure of "CraftingFinished" table
 local msgFinishedCrafting = {
     channel = "AEEssenceCrafting",
     type = "CraftingFinished",
