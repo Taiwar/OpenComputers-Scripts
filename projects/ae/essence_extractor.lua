@@ -174,7 +174,13 @@ function main()
                 craftingFinished = message["type"] == "CraftingFinished"
             end
             -- Refresh count
-            itemCount = aeSystem.getItemsInNetwork({name=item["name"]})[1]["size"]
+            local currentItem = aeSystem.getItemsInNetwork({name=item["name"]})
+            -- If item could be found in AE system get its count, otherwise set itemCount to 0.
+            if currentItem[1] ~= nil then
+                itemCount = currentItem[1]["size"];
+            else
+                itemCount = 0
+            end
         end
     end
 end
