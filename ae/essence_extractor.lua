@@ -39,7 +39,7 @@ local EXPORT_BUS_DIRECTION = sides.down
 local INPUT_SLOT = 13
 local PORT = 1000
 
--- Structure of "CraftingFinished" table
+-- Structure of "CraftingStart" table
 local msgStartCrafting = {
     channel = "AEEssenceCrafting",
     type = "CraftingStart",
@@ -52,6 +52,7 @@ local MYSTICAL_AGRADDITIONS = "mysticalagradditions:"
 local ESSENCE = "_essence"
 
 -- List of strings which, when found in an item, will exclude them from processing
+-- These are mainly essences which have multiple recipes and you don't want to autocraft into one specific recipe all the time
 local exclusions = {
     "insanium",
     "supremium",
@@ -72,8 +73,6 @@ local exclusions = {
     "rabbit",
     "mystical flower"
 }
-
--- Operational vars
 
 -- How many item-stacks are stored in the database
 local stored = 0
