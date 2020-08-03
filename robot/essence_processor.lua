@@ -46,8 +46,8 @@ local msgFinishedCrafting = {
 }
 
 -- Predefined recipes for crafting essences
---  0 = none
---  anything else = amount provided / given positions
+-- 0 = none
+-- anything else = amount provided / given positions
 local recipes = {
     default = {
         1, 1, 1,
