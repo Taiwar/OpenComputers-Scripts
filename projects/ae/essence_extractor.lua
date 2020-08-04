@@ -193,9 +193,11 @@ if LOOP then
     while true do
         print("Updating internal database and starting run...")
         main()
-        print("Going to sleep for "..LOOP_TIMEOUT.."s")
+        print("Finished run. Going to sleep for "..LOOP_TIMEOUT.."s")
         os.sleep(LOOP_TIMEOUT)
     end
 else
+    print("Updating internal database and starting run...")
     main()
+    print("Finished run.")
 end
