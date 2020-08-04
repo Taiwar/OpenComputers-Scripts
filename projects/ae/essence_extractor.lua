@@ -35,10 +35,11 @@ local db = comp.database
 local m = comp.modem
 
 -- Constants for operation
-local EXPORT_BUS_DIRECTION = sides.down
-local INPUT_SLOT = 13
-local PORT = 1000
-local LOOP = true
+local EXPORT_BUS_DIRECTION = sides.down -- The direction the export bus is facing, which is supposed to exportto the Essence Processor
+local INPUT_SLOT = 13 -- Slot on the Essence Processor Robot that is defined there as INPUT_SLOT too
+local PORT = 1000 -- Port over which to communicate with Essence Processor
+local LOOP = true -- Continously get all essences from AE system and craft them
+local LOOP_TIMEOUT = 60 -- Time to wait between loop iterations (in s)
 
 -- Structure of "CraftingStart" table
 local msgStartCrafting = {
@@ -190,7 +191,10 @@ end
 
 if LOOP then
     while true do
+        print("Updating internal database and starting run...")
         main()
+        print("Going to sleep for "..LOOP_TIMEOUT.."s")
+        os.sleep(LOOP_TIMEOUT)
     end
 else
     main()
