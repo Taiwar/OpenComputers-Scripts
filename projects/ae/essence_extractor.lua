@@ -76,7 +76,7 @@ local exclusions = {
 }
 
 -- How many item-stacks are stored in the database
-local stored = 0
+local stored
 
 -- Find target items to process (essences) in all items and store their item-stack information (if not excluded) in database
 -- Note: "item" in this context means a type of item in the system and is not limited in amount
@@ -142,8 +142,11 @@ end
 -- Main program function
 function main()
     -- Open modem port to receive/send messages
-    m.open(PORT)
+    if not m.isOpen(PORT) then
+        m.open(PORT)
+    end
     clearDb()
+    stored = 0
 
     -- Fetch all items currents in AE network with no filter
     -- (the filter options don't seem to allow any fuzzy/complex filters so we're filtering the results ourselves)
