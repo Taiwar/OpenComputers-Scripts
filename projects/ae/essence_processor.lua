@@ -87,6 +87,7 @@ local ESSENCE = "_essence"
 local mappings = {}
 mappings[MYSTICAL_AGRICULTURE.."nether_quartz"..ESSENCE] = recipes["dumbbell"]
 mappings[MYSTICAL_AGRICULTURE.."redstone"..ESSENCE] = recipes["full"]
+mappings[MYSTICAL_AGRICULTURE.."diamond"..ESSENCE] = recipes["full"]
 mappings[MYSTICAL_AGRICULTURE.."silicon"..ESSENCE] = recipes["line"]
 mappings[MYSTICAL_AGRICULTURE.."rubber"..ESSENCE] = recipes["line"]
 mappings[MYSTICAL_AGRICULTURE.."blizz"..ESSENCE] = recipes["cross"]

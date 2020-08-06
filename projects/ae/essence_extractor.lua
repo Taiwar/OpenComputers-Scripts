@@ -53,27 +53,27 @@ local MYSTICAL_AGRICULTURE = "mysticalagriculture:"
 local MYSTICAL_AGRADDITIONS = "mysticalagradditions:"
 local ESSENCE = "_essence"
 
--- List of strings which, when found in an item, will exclude them from processing
+-- List of item names to be excluded from processing
 -- These are mainly essences which have multiple recipes and you don't want to autocraft into one specific recipe all the time
 local exclusions = {
-    "insanium",
-    "supremium",
-    "superium",
-    "intermedium",
-    "prudentium",
-    "inferium",
-    "fertilized",
-    "dirt",
-    "nature",
-    "dye",
-    "wood",
-    "water",
-    "ice",
-    "fire",
-    "nether",
-    "experience",
-    "rabbit",
-    "mystical flower"
+    MYSTICAL_AGRADDITIONS.."insanium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."supremium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."superium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."intermedium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."prudentium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."inferium"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."fertilized"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."dirt"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."nature"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."dye"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."wood"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."water"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."ice"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."fire"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."nether"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."experience"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."rabbit"..ESSENCE,
+    MYSTICAL_AGRICULTURE.."mystical_flower"..ESSENCE
 }
 
 -- How many item-stacks are stored in the database
@@ -97,7 +97,7 @@ function findEssences(items)
                 -- Go through all entries of the exclusions list and match the name of the item contains an excluded string
                 local isExcluded = false
                 for _, v in pairs(exclusions) do
-                    if string.find(string.lower(item['label']), v) then
+                    if string.lower(item['name']) == v then
                         isExcluded = true
                         break
                     end
