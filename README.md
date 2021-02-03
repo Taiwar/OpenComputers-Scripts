@@ -18,7 +18,7 @@ Scripts are categorized in folders based on
   
 ## Running the scripts
 Scripts are in different stages of being developed, but newer ones will have their requirements in a comment-header-block
-in the file itself or, if part of a project, in a `README.md` in that file.
+in the file itself or, if part of a project, in a `README.md` in that folder.
 
 ## Disclaimer
 Currently, I am making no commitment towards maintaining any of the scripts in this repository, so there are no 
